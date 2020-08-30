@@ -37,11 +37,6 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
             val binder = service as FloatingService.LocalBinder
             mOverlayService = binder.getService()
             mBound = true
-
-            if (call != null)
-                if(call.method == "openBubble"){
-                    val arguments = call.arguments as List<Any?>
-                }
         }
         override fun onServiceDisconnected(arg0: ComponentName) {
             mOverlayService?.stopSelf()
@@ -75,7 +70,7 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
             } else {
                 activity?.startService(
                         Intent(activity, FloatingService::class.java))
-                activity?.moveTaskToBack(true)
+                //activity?.moveTaskToBack(true)
             }
         }
         "isBubbleOpen" -> result.success(mBound)

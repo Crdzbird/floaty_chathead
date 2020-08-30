@@ -18,11 +18,11 @@
       android:adjustViewBounds="true"
       android:src="@drawable/ic_close"/>
 
-  <com.google.android.material.card.MaterialCardView
+  <androidx.cardview.widget.CardView
       android:id="@+id/expandableViewCard"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      app:cardBackgroundColor="@android:color/transparent"
+      app:cardBackgroundColor="@color/transparent"
       app:cardCornerRadius="4dp"
       app:cardElevation="0dp">
 
@@ -32,5 +32,5 @@
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
         android:orientation="vertical"/>
-  </com.google.android.material.card.MaterialCardView>
+  </androidx.cardview.widget.CardView>
 </androidx.appcompat.widget.LinearLayoutCompat>

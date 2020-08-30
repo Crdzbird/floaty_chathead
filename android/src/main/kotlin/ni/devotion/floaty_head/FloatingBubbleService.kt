@@ -20,7 +20,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
-import com.google.android.material.card.MaterialCardView
+import androidx.cardview.widget.CardView
 import ni.devotion.floaty_head.FloatingBubbleConfig.Companion.getDefault
 import kotlin.math.roundToInt
 
@@ -133,7 +133,7 @@ open class FloatingBubbleService : Service() {
         expandableParams!!.height = windowSize.y - iconSize - bottomMargin
         expandableParams!!.gravity = Gravity.TOP or Gravity.START
         expandableView!!.visibility = View.GONE
-        (expandableView as LinearLayout?)!!.gravity = config!!.gravity
+        (expandableView as LinearLayoutCompat?)!!.gravity = config!!.gravity
         expandableView!!.setPadding(padding, padding, padding, padding)
         windowManager!!.addView(expandableView, expandableParams)
         bubbleParams = defaultWindowParams
@@ -147,7 +147,7 @@ open class FloatingBubbleService : Service() {
         config?.bubbleIcon?.let {
             (bubbleView as AppCompatImageView).setImageDrawable(it)
         }
-        val card = expandableView!!.findViewById<View>(R.id.expandableViewCard) as MaterialCardView
+        val card = expandableView!!.findViewById<View>(R.id.expandableViewCard) as CardView
         card.radius = dpToPixels(config!!.borderRadiusDp).toFloat()
         val triangle = expandableView!!.findViewById<View>(R.id.expandableViewTriangle) as AppCompatImageView
         val container = expandableView!!.findViewById<View>(R.id.expandableViewContainer) as LinearLayoutCompat

@@ -1,1 +1,26 @@
-<manifest package="ni.devotion.floaty_head" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+  package="ni.devotion.floaty_head">
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <application>
+        <activity
+            android:name="MainActivity"
+            android:allowEmbedded="true"
+            android:documentLaunchMode="always"
+            android:label="floaty_head"
+            android:resizeableActivity="true"
+            android:showOnLockScreen="true"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:targetApi="n" />
+        <service
+            android:name=".FloatingService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.FOREGROUND_SERVICE"/>
+    </application>
+
+</manifest>
