@@ -48,9 +48,7 @@ open class FloatingBubbleService : Service() {
         fun getService() = this@FloatingBubbleService
     }
 
-    override fun onBind(intent: Intent): IBinder? {
-        return binder
-    }
+    override fun onBind(intent: Intent) = binder
 
     override fun onCreate() {
         super.onCreate()
@@ -61,12 +59,10 @@ open class FloatingBubbleService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        mWakeLock?.acquire(30 * 60 * 1000L /*30 minutes*/)
-
+        mWakeLock?.acquire(30 * 60 * 1000L)
         if (intent == null || !onGetIntent(intent)) {
             return START_NOT_STICKY
         }
-        logger!!.log("Start with START_STICKY")
         removeAllViews()
         setupWindowManager()
         setupViews()
@@ -83,17 +79,19 @@ open class FloatingBubbleService : Service() {
 
     private fun removeAllViews() {
         windowManager ?: return
-        if (bubbleView != null) {
-            windowManager!!.removeView(bubbleView)
-            bubbleView = null
-        }
-        if (removeBubbleView != null) {
-            windowManager!!.removeView(removeBubbleView)
-            removeBubbleView = null
-        }
-        if (expandableView != null) {
-            windowManager!!.removeView(expandableView)
-            expandableView = null
+        windowManager?.let{
+            bubbleView?.let{ bv ->
+                it.removeView(bv)
+                bubbleView = null
+            }
+            removeBubbleView?.let{ rb ->
+                it.removeView(rb)
+                removeBubbleView = null
+            }
+            bubbleView?.let{ ev ->
+                it.removeView(ev)
+                expandableView = null
+            }
         }
     }
 

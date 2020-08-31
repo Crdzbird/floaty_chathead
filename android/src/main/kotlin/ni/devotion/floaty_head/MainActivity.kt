@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
     private var paramsMap: HashMap<String, Any>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        startService(Intent(applicationContext, FloatingService::class.java).putExtra("message", "HEU"))
+        //startService(Intent(applicationContext, FloatingService::class.java).putExtra("message", "HEU"))
     }
 
 }
