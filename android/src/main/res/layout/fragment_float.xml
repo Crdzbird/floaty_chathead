@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/contentLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="80dp"
+    android:orientation="vertical"
+    android:clickable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:padding="8dp"
+        android:baselineAligned="false"
+        android:paddingStart="16dp"
+        android:background="@color/colorAccent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textColor="#fff"
+                android:text="~ "
+                android:alpha="0.54"
+                android:id="@+id/hashtag"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+            <TextView
+                android:textColor="#fff"
+                android:text="chatbot_title"
+                android:textSize="16sp"
+                android:id="@+id/channel"
+                android:fontFamily="sans-serif-medium"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content" />
+        </LinearLayout>
+
+        <TextView
+            android:textColor="#fff"
+            android:text="chatbot_status"
+            android:textSize="12sp"
+            android:alpha="0.5"
+            android:id="@+id/server"
+            android:fontFamily="sans-serif-medium"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" />
+    </LinearLayout>
+    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/colorAccent" android:alpha="0.12" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="26dp"
+        app:cardBackgroundColor="@android:color/white"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:padding="8dp"
+        android:elevation="2dp"
+        android:layout_marginEnd="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/messageInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:layout_gravity="center_vertical"
+                android:textSize="14sp"
+                android:padding="8dp"
+                android:textColor="@color/md_black_1000"
+                android:hint="type_message"/>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/sendMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_chathead"
+                android:scaleType="fitCenter"
+                android:layout_weight="1"
+                android:tint="@color/colorAccent"
+                android:background="@android:color/white"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>
