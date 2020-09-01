@@ -17,7 +17,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             tools:targetApi="n" />
         <service
-            android:name=".FloatingService"
+            android:name=".services.FloatingService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.FOREGROUND_SERVICE"/>

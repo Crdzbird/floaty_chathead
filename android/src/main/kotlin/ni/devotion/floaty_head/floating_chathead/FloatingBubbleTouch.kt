@@ -1,4 +1,4 @@
-package ni.devotion.floaty_head
+package ni.devotion.floaty_head.floating_chathead
 
 import android.view.Gravity
 import android.view.MotionEvent

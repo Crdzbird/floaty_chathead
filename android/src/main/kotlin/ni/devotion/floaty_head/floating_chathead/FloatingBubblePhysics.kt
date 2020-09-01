@@ -1,4 +1,4 @@
-package ni.devotion.floaty_head
+package ni.devotion.floaty_head.floating_chathead
 
 import android.graphics.Point
 import android.util.Log

@@ -1,4 +1,4 @@
-package ni.devotion.floaty_head
+package ni.devotion.floaty_head.floating_chathead
 
 import android.util.Log
 
@@ -16,6 +16,6 @@ class FloatingBubbleLogger {
         isDebugEnabled = enabled
         return this
     }
-    fun log(message: String?) = if (isDebugEnabled) Log.d(tag, message) else null
+    fun log(message: String?) = if (isDebugEnabled) Log.d(tag, message!!) else null
     fun log(message: String?, throwable: Throwable?) = if (isDebugEnabled) Log.e(tag, message, throwable) else null
 }

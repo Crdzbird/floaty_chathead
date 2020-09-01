@@ -1,5 +1,6 @@
 package ni.devotion.floaty_head
 
+import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -7,7 +8,6 @@ import android.content.res.Configuration
 import android.graphics.PixelFormat
 import android.graphics.Point
 import android.os.Binder
-import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.util.DisplayMetrics
@@ -16,13 +16,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.WindowManager
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.cardview.widget.CardView
-import ni.devotion.floaty_head.FloatingBubbleConfig.Companion.getDefault
+import ni.devotion.floaty_head.floating_chathead.*
+import ni.devotion.floaty_head.floating_chathead.FloatingBubbleConfig.Companion.getDefault
 import kotlin.math.roundToInt
+
 
 open class FloatingBubbleService : Service() {
     companion object {
@@ -42,6 +42,8 @@ open class FloatingBubbleService : Service() {
     private var config: FloatingBubbleConfig? = null
     private var physics: FloatingBubblePhysics? = null
     private var touch: FloatingBubbleTouch? = null
+    private var notificationManager: NotificationManager? = null
+
     private var binder = LocalBinder()
 
     inner class LocalBinder : Binder() {

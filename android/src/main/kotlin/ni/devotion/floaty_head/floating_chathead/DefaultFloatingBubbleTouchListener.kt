@@ -1,4 +1,6 @@
-package ni.devotion.floaty_head
+package ni.devotion.floaty_head.floating_chathead
+
+import ni.devotion.floaty_head.floating_chathead.FloatingBubbleTouchListener
 
 open class DefaultFloatingBubbleTouchListener : FloatingBubbleTouchListener {
     override fun onDown(x: Float, y: Float) {}

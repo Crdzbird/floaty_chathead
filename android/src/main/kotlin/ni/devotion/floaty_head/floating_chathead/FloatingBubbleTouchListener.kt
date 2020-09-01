@@ -1,4 +1,4 @@
-package ni.devotion.floaty_head
+package ni.devotion.floaty_head.floating_chathead
 
 interface FloatingBubbleTouchListener {
     fun onTap(expanded: Boolean)

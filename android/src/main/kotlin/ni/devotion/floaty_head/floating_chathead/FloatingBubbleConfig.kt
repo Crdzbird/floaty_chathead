@@ -1,4 +1,4 @@
-package ni.devotion.floaty_head
+package ni.devotion.floaty_head.floating_chathead
 
 import android.content.Context
 import android.graphics.Color
@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.View
 import androidx.core.content.ContextCompat
+import ni.devotion.floaty_head.R
 
 class FloatingBubbleConfig private constructor(builder: Builder) {
     val bubbleIcon: Drawable?

@@ -1,4 +1,4 @@
-package ni.devotion.floaty_head
+package ni.devotion.floaty_head.floating_chathead
 
 import android.animation.ValueAnimator
 import android.util.Log
@@ -40,7 +40,7 @@ class FloatingBubbleAnimator private constructor(builder: Builder) {
                 bubbleParams.y = if (bubbleParams.y > sizeY - bubbleView.width) sizeY - bubbleView.width else bubbleParams.y
                 windowManager!!.updateViewLayout(bubbleView, bubbleParams)
             } catch (exception: Exception) {
-                Log.e(FloatingBubbleAnimator::class.java.simpleName, exception.message)
+                Log.e(FloatingBubbleAnimator::class.java.simpleName, exception.message!!)
             }
         }
         animator.start()
