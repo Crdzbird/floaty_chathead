@@ -9,11 +9,8 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import ni.devotion.floaty_head.FloatingService
 
 class MainActivity : AppCompatActivity() {
-    private var bubbleLayout: LinearLayoutCompat? = null
-    private var paramsMap: HashMap<String, Any>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //startService(Intent(applicationContext, FloatingService::class.java).putExtra("message", "HEU"))
     }
 
 }

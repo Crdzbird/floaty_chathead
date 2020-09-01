@@ -48,21 +48,20 @@ open class FloatingBubbleService : Service() {
         fun getService() = this@FloatingBubbleService
     }
 
-    override fun onBind(intent: Intent) = binder
+    override fun onBind(intent: Intent): IBinder? {
+        return binder
+    }
 
     override fun onCreate() {
         super.onCreate()
         val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
-        mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "layout_bubble:service")
-        logger =
-            FloatingBubbleLogger().setDebugEnabled(true).setTag(TAG)
+        mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "floaty_head:service")
+        logger = FloatingBubbleLogger().setDebugEnabled(true).setTag(TAG)
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         mWakeLock?.acquire(30 * 60 * 1000L)
-        if (intent == null || !onGetIntent(intent)) {
-            return START_NOT_STICKY
-        }
+        intent ?: return START_NOT_STICKY
         removeAllViews()
         setupWindowManager()
         setupViews()
@@ -73,7 +72,6 @@ open class FloatingBubbleService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         stopForeground(true)
-        logger!!.log("onDestroy")
         removeAllViews()
     }
 
@@ -222,10 +220,6 @@ open class FloatingBubbleService : Service() {
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                     PixelFormat.TRANSLUCENT);
         }
-    }
-
-    protected fun onGetIntent(intent: Intent): Boolean {
-        return true
     }
 
     protected fun getInflaterBubble(): LayoutInflater? {

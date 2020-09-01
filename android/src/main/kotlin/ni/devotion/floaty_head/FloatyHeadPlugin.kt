@@ -20,15 +20,16 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
 /* FloatyHeadPlugin */
 class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallHandler {
-  private var activity: Activity? = null
-  private var channel: MethodChannel? = null
-  private val channelName: String = "ni.devotion/floaty_head"
-  private val CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084
-  private var mOverlayService: FloatingService? = null
-  private var connection: ServiceConnection? = null
-  private var connectionVideo: ServiceConnection? = null
-  private var mBound: Boolean = false
-  private var mBoundVideo: Boolean = false
+    private var activity: Activity? = null
+    private var channel: MethodChannel? = null
+    private val channelName: String = "ni.devotion/floaty_head"
+    private val CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084
+    private var mOverlayService: FloatingService? = null
+    private var connection: ServiceConnection? = null
+    private var connectionVideo: ServiceConnection? = null
+    private var mBound: Boolean = false
+    private var mBoundVideo: Boolean = false
+    private var paramsMap = emptyMap<String, Any>()
 
   private fun connect(call: MethodCall?) {
     connection = object : ServiceConnection {
@@ -61,9 +62,13 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
     connect(call)
     when (call.method) {
         "openBubble" -> {
+            /*activity?.intent?.let {
+                it.extras?.let { extras ->
+                    paramsMap = it.getSerializableExtra("intent_params_map") as HashMap<String, Any>
+                }
+            }*/
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(activity)) {
                 val packageName = activity?.packageName
-                println( "PACKAGE: ${Uri.parse("package:$packageName")}")
                 activity?.startActivityForResult(
                         Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")),
                         CODE_DRAW_OVER_OTHER_APP_PERMISSION)
