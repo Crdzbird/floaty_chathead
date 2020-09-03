@@ -13,12 +13,12 @@ class Home extends StatefulWidget {
 }
 
 class _Home extends State<Home> {
-  final FloatyHead bubbleOverlay = FloatyHead();
+  final FloatyHead floatyHead = FloatyHead();
   bool alternateColor = false;
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text('Bubble Overlay')),
+        appBar: AppBar(title: Text('Floaty Chathead')),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(50),
           child: Column(
@@ -26,10 +26,19 @@ class _Home extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               RaisedButton(
-                  child: Text('Open Bubble Overlay'),
-                  onPressed: () => bubbleOverlay.openBubble()),
+                  child: Text('Open Floaty Chathead'),
+                  onPressed: () => floatyHead.openBubble()),
+              RaisedButton(
+                  child: Text('Close Floaty Chathead'),
+                  onPressed: () => closeFloatyHead()),
             ],
           ),
         ),
       );
+
+  void closeFloatyHead() {
+    if (floatyHead.isOpen) {
+      floatyHead.closeHead();
+    }
+  }
 }

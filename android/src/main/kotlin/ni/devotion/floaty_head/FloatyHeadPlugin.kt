@@ -42,13 +42,11 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
         }
         override fun onServiceDisconnected(arg0: ComponentName) {
             mOverlayService?.stopSelf()
-            println("desconected")
             mBound = false
         }
     }
 
     Intent(activity, FloatingService::class.java).also { intent ->
-      println("connection: $connection")
         if (connection != null) activity?.bindService(intent, connection!!, 0)
     }
   }
@@ -62,12 +60,7 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
   override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
     connect(call)
     when (call.method) {
-        "openBubble" -> {
-            /*activity?.intent?.let {
-                it.extras?.let { extras ->
-                    paramsMap = it.getSerializableExtra("intent_params_map") as HashMap<String, Any>
-                }
-            }*/
+        "start" -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(activity)) {
                 val packageName = activity?.packageName
                 activity?.startActivityForResult(
@@ -79,10 +72,9 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
                 //activity?.moveTaskToBack(true)
             }
         }
-        "isBubbleOpen" -> result.success(mBound)
-        "closeBubble" -> if (mBound) release()
+        "isOpen" -> result.success(mBound)
+        "close" -> if (mBound) release()
         else -> {
-          println("fail")
           result.notImplemented()
         }
     }

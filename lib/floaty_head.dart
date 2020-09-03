@@ -12,23 +12,37 @@ class FloatyHead {
 
   FloatyHead() {
     if (!Platform.isAndroid)
-      throw PlatformException(
-          code: 'Bubble overlay only available for Android');
+      throw PlatformException(code: 'Floaty Head only available for Android');
   }
   static const _platform = const MethodChannel('ni.devotion/floaty_head');
   void openBubble() async {
-    _platform.invokeMethod('openBubble');
-
+    _platform.invokeMethod('start');
     setCallback(callback);
-
     _timer = Timer.periodic(Duration(seconds: 1), (timer) async {
-      _isOpen = await _platform?.invokeMethod('isBubbleOpen') ?? false;
+      _isOpen = await _platform?.invokeMethod('isOpen') ?? false;
       if (!_isOpen) {
-        print("isnt open");
         timer?.cancel();
       }
     });
   }
 
   void setCallback(Timer callback) => _callback = callback;
+
+  void closeHead() {
+    if (_isOpen) {
+      removeCallback();
+      _platform.invokeMethod('close');
+      _timer.cancel();
+      _isOpen = false;
+    } else
+      throw Exception('Floaty Head not running');
+  }
+
+  void removeCallback() {
+    if (_isOpen) {
+      _callback?.cancel();
+      _callback = null;
+    } else
+      throw Exception('Floaty Head not running');
+  }
 }
