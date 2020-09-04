@@ -8,7 +8,7 @@
 
     <application>
         <activity
-            android:name="MainActivity"
+            android:name=".MainActivity"
             android:allowEmbedded="true"
             android:documentLaunchMode="always"
             android:label="floaty_head"

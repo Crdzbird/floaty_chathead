@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:floaty_head/floaty_head.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 Future<void> main() async {
   runApp(MaterialApp(home: Home()));
@@ -31,6 +31,9 @@ class _Home extends State<Home> {
               RaisedButton(
                   child: Text('Close Floaty Chathead'),
                   onPressed: () => closeFloatyHead()),
+              RaisedButton(
+                  child: Text('Set icon Floaty Chathead'),
+                  onPressed: () => setIconFromAsset()),
             ],
           ),
         ),
@@ -40,5 +43,23 @@ class _Home extends State<Home> {
     if (floatyHead.isOpen) {
       floatyHead.closeHead();
     }
+  }
+
+  Future<void> setIconFromAsset() async {
+    String result;
+    String assetPath = "assets/tmp1.jpg";
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await floatyHead.setIconFromAsset(assetPath);
+      print(result);
+    } on PlatformException {
+      result = 'Failed to get wallpaper.';
+    }
+
+    print(result);
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
   }
 }

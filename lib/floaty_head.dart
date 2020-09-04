@@ -28,6 +28,14 @@ class FloatyHead {
 
   void setCallback(Timer callback) => _callback = callback;
 
+  Future<String> setIconFromAsset(String assetPath) async {
+    final int result =
+        await _platform.invokeMethod('setIconFromAsset', assetPath);
+
+    /// Function returns the set String as result, use for debugging
+    return result > 0 ? "Wallpaper set" : "There was an error.";
+  }
+
   void closeHead() {
     if (_isOpen) {
       removeCallback();

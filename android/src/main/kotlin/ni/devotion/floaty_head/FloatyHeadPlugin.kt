@@ -1,15 +1,20 @@
 package ni.devotion.floaty_head
 
 import android.app.Activity
+import android.content.Context;
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
 import androidx.annotation.NonNull
+import java.io.IOException;
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.loader.FlutterLoader;
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -28,14 +33,22 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
     private var mOverlayService: FloatingService? = null
     private var connection: ServiceConnection? = null
     private var connectionVideo: ServiceConnection? = null
+    private var registrar: Registrar? = null
     private var mBound: Boolean = false
     private var mBoundVideo: Boolean = false
     private var paramsMap = emptyMap<String, Any>()
+    private var DRAWABLE: String = "drawable";
+    private var DEFAULT_ICON: String = "defaultIcon";
+    private var context:Context? = null
+    fun registerWith(pluginRegistrar:Registrar) {
+        context = pluginRegistrar.context()
+        channel = MethodChannel(pluginRegistrar.messenger(), channelName)
+        channel!!.setMethodCallHandler(FloatyHeadPlugin())
+    }
 
-  private fun connect(call: MethodCall?) {
-    connection = object : ServiceConnection {
-
-        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+    private fun connect(call: MethodCall?) {
+        connection = object : ServiceConnection {
+            override fun onServiceConnected(className: ComponentName, service: IBinder) {
             val binder = service as FloatingService.LocalBinder
             mOverlayService = binder.getService()
             mBound = true
@@ -45,7 +58,6 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
             mBound = false
         }
     }
-
     Intent(activity, FloatingService::class.java).also { intent ->
         if (connection != null) activity?.bindService(intent, connection!!, 0)
     }
@@ -74,11 +86,51 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
         }
         "isOpen" -> result.success(mBound)
         "close" -> if (mBound) release()
+        "setIconFromAsset" -> {
+            var demo = call.arguments as String
+            println(demo)
+            result.success(setIconFromAsset(demo))
+        }
         else -> {
           result.notImplemented()
         }
     }
   }
+
+  private fun setIconFromAsset(assetPath:String):Int {
+    var result = -1
+    try
+    {
+        println("insideSetIconFromAsset")
+      //val wm = WallpaperManager.getInstance(context)
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+      {
+        val inputStream = activity!!.applicationContext.getAssets().open("flutter_assets/" + assetPath)
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+        println("result....")
+        println(bitmap)
+        println("----------------")
+        result = 1
+        //result = wm.setBitmap(bitmap, null, false, wallpaperLocation)
+      }
+      else
+      {
+        val assetLookupKey = FlutterLoader.getInstance().getLookupKeyForAsset(assetPath)
+        val assetManager = activity!!.applicationContext.getAssets()
+        val assetFileDescriptor = assetManager.openFd(assetLookupKey)
+        val inputStream = assetFileDescriptor.createInputStream()
+        println("inputStream.....")
+        println(inputStream)
+        println("-------------------------")
+        //wm.setStream(inputStream)
+        result = 1
+      }
+    }
+    catch (e:IOException) {
+      e.printStackTrace()
+    }
+    return result
+}
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
     channel?.setMethodCallHandler(null)
