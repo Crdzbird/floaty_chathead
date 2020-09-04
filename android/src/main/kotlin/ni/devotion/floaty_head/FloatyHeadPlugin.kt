@@ -23,6 +23,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import ni.devotion.floaty_head.services.FloatingService
+import ni.devotion.floaty_head.utils.Managment
 
 /* FloatyHeadPlugin */
 class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallHandler {
@@ -107,9 +108,7 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
       {
         val inputStream = activity!!.applicationContext.getAssets().open("flutter_assets/" + assetPath)
         val bitmap = BitmapFactory.decodeStream(inputStream)
-        println("result....")
-        println(bitmap)
-        println("----------------")
+        Managment.floatingIcon = bitmap
         result = 1
         //result = wm.setBitmap(bitmap, null, false, wallpaperLocation)
       }
@@ -119,9 +118,7 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
         val assetManager = activity!!.applicationContext.getAssets()
         val assetFileDescriptor = assetManager.openFd(assetLookupKey)
         val inputStream = assetFileDescriptor.createInputStream()
-        println("inputStream.....")
-        println(inputStream)
-        println("-------------------------")
+          Managment.floatingIcon = BitmapFactory.decodeStream(inputStream)
         //wm.setStream(inputStream)
         result = 1
       }

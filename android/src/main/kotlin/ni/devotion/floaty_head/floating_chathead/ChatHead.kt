@@ -9,6 +9,7 @@ import com.facebook.rebound.*
 import ni.devotion.floaty_head.R
 import ni.devotion.floaty_head.services.FloatingService
 import ni.devotion.floaty_head.utils.ImageHelper
+import ni.devotion.floaty_head.utils.Managment
 import kotlin.math.hypot
 import kotlin.math.pow
 
@@ -27,7 +28,7 @@ class ChatHead(var chatHeads: ChatHeads): View(chatHeads.context), View.OnTouchL
     var springX = springSystem.createSpring()
     var springY = springSystem.createSpring()
     val paint = Paint()
-    val bitmap = ImageHelper.addShadow(ImageHelper.getCircularBitmap(BitmapFactory.decodeResource(FloatingService.instance.resources, R.drawable.bot)))
+    val bitmap = ImageHelper.addShadow(ImageHelper.getCircularBitmap(Managment.floatingIcon!!))
     private var initialX = 0.0f
     private var initialY = 0.0f
     private var initialTouchX = 0.0f
