@@ -33,6 +33,18 @@ class FloatyHead {
     return result > 0 ? "Icon set" : "There was an error.";
   }
 
+  Future<String> setNotificationTitle(String title) async {
+    final int result =
+        await _platform.invokeMethod('setNotificationTitle', title);
+    return result > 0 ? "Notification Title set" : "There was an error.";
+  }
+
+  Future<String> setNotificationIcon(String assetPath) async {
+    final int result =
+        await _platform.invokeMethod('setNotificationIcon', assetPath);
+    return result > 0 ? "NotificationIcon set" : "There was an error.";
+  }
+
   Future<String> setCloseIcon(String assetPath) async {
     final int result = await _platform.invokeMethod('setCloseIcon', assetPath);
     return result > 0 ? "Close Icon set" : "There was an error.";

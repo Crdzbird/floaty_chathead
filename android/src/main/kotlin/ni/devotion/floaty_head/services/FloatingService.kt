@@ -1,12 +1,12 @@
 package ni.devotion.floaty_head.services
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Icon
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
@@ -17,6 +17,7 @@ import androidx.core.app.NotificationCompat
 import ni.devotion.floaty_head.FloatyHeadPlugin
 import ni.devotion.floaty_head.R
 import ni.devotion.floaty_head.floating_chathead.ChatHeads
+import ni.devotion.floaty_head.utils.Managment
 
 
 class FloatingService: Service() {
@@ -26,6 +27,7 @@ class FloatingService: Service() {
     private var binder = LocalBinder()
     lateinit var windowManager: WindowManager
     var chatHeads: ChatHeads? = null
+    var notification: Notification? = null
 
     override fun onCreate() {
         instance = this
@@ -34,11 +36,20 @@ class FloatingService: Service() {
         val notificationIntent = Intent(this, FloatyHeadPlugin::class.java)
         val pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0)
-        val notification = NotificationCompat.Builder(this, "ForegroundServiceChannel")
-                .setContentTitle("Floaty Head is Currently Running")
-                .setSmallIcon(R.drawable.ic_chathead)
-                .setContentIntent(pendingIntent)
-                .build()
+        notification = if(Managment.notificationIcon == null) {
+            NotificationCompat.Builder(this, "ForegroundServiceChannel")
+                    .setContentTitle("${Managment.notificationTitle} is Currently Running")
+                    .setSmallIcon(R.drawable.ic_chathead)
+                    .setContentIntent(pendingIntent)
+                    .build()
+        }else{
+            NotificationCompat.Builder(this, "ForegroundServiceChannel")
+                    .setContentTitle("${Managment.notificationTitle} is Currently Running")
+                    .setLargeIcon(Managment.notificationIcon)
+                    .setContentIntent(pendingIntent)
+                    .build()
+        }
+
         startForeground(1, notification)
         chatHeads = ChatHeads(this)
         chatHeads?.add()

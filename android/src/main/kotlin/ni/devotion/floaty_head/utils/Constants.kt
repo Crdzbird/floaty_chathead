@@ -1,6 +1,6 @@
 package ni.devotion.floaty_head.utils
 
-class Constants {
+object Constants {
 
     val CHANNEL = "ni.devotion.floaty_head"
     val BACKGROUND_CHANNEL = "ni.devotion.floaty_head/background"
