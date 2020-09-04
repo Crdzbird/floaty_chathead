@@ -1,9 +1,7 @@
 package ni.devotion.floaty_head.floating_chathead
 
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.PixelFormat
+import android.graphics.*
+import android.graphics.BitmapFactory.*
 import android.view.*
 import com.facebook.rebound.*
 import ni.devotion.floaty_head.R
@@ -28,7 +26,6 @@ class ChatHead(var chatHeads: ChatHeads): View(chatHeads.context), View.OnTouchL
     var springX = springSystem.createSpring()
     var springY = springSystem.createSpring()
     val paint = Paint()
-    val bitmap = ImageHelper.addShadow(ImageHelper.getCircularBitmap(Managment.floatingIcon!!))
     private var initialX = 0.0f
     private var initialY = 0.0f
     private var initialTouchX = 0.0f
@@ -72,7 +69,10 @@ class ChatHead(var chatHeads: ChatHeads): View(chatHeads.context), View.OnTouchL
     }
 
     override fun onDraw(canvas: Canvas?) {
-        canvas?.drawBitmap(bitmap, 0f, 0f, paint)
+        Managment.floatingIcon ?: canvas?.drawBitmap(ImageHelper.addShadow((ImageHelper.getCircularBitmap(decodeResource(FloatingService.instance.resources, R.drawable.bot)))), 0f, 0f, paint)
+        Managment.floatingIcon?.let {
+            canvas?.drawBitmap(ImageHelper.addShadow(ImageHelper.getCircularBitmap(it)), 0f, 0f, paint)
+        }
     }
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {

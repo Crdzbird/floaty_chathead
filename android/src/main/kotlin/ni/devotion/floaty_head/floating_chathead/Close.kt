@@ -9,6 +9,8 @@ import androidx.core.content.ContextCompat
 import com.facebook.rebound.*
 import ni.devotion.floaty_head.R
 import ni.devotion.floaty_head.services.FloatingService
+import ni.devotion.floaty_head.utils.ImageHelper
+import ni.devotion.floaty_head.utils.Managment
 
 class Close(var chatHeads: ChatHeads): View(chatHeads.context) {
     private var params = WindowManager.LayoutParams(
@@ -27,8 +29,8 @@ class Close(var chatHeads: ChatHeads): View(chatHeads.context) {
     var springScale = springSystem.createSpring()
     val paint = Paint()
     val gradient = FrameLayout(context)
-    private var bitmapBg = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(FloatingService.instance.resources, R.drawable.close_bg), ChatHeads.CLOSE_SIZE, ChatHeads.CLOSE_SIZE, false)!!
-    private val bitmapClose = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(FloatingService.instance.resources, R.drawable.close), WindowManagerHelper.dpToPx(28f), WindowManagerHelper.dpToPx(28f), false)!!
+    private var bitmapBg: Bitmap? = null
+    private var bitmapClose: Bitmap? = null
 
     fun hide() {
         val metrics = WindowManagerHelper.getScreenSize()
@@ -50,6 +52,14 @@ class Close(var chatHeads: ChatHeads): View(chatHeads.context) {
     }
 
     init {
+        bitmapBg = Managment.backgroundCloseIcon ?: Bitmap.createScaledBitmap(BitmapFactory.decodeResource(FloatingService.instance.resources, R.drawable.close_bg), ChatHeads.CLOSE_SIZE, ChatHeads.CLOSE_SIZE, false)
+        Managment.backgroundCloseIcon?.let {
+            bitmapBg = Bitmap.createScaledBitmap(it, ChatHeads.CLOSE_SIZE, ChatHeads.CLOSE_SIZE, false)
+        }
+        bitmapClose = Managment.closeIcon ?: Bitmap.createScaledBitmap(BitmapFactory.decodeResource(FloatingService.instance.resources, R.drawable.close), WindowManagerHelper.dpToPx(28f), WindowManagerHelper.dpToPx(28f), false)
+        Managment.closeIcon?.let {
+            bitmapClose = Bitmap.createScaledBitmap(it, WindowManagerHelper.dpToPx(28f), WindowManagerHelper.dpToPx(28f), false)
+        }
         this.setLayerType(View.LAYER_TYPE_HARDWARE, paint)
         visibility = View.INVISIBLE
         hide()
@@ -70,7 +80,10 @@ class Close(var chatHeads: ChatHeads): View(chatHeads.context) {
         })
         springScale.addListener(object : SimpleSpringListener() {
             override fun onSpringUpdate(spring: Spring) {
-                bitmapBg =  Bitmap.createScaledBitmap(BitmapFactory.decodeResource(FloatingService.instance.resources, R.drawable.close_bg), (spring.currentValue + ChatHeads.CLOSE_SIZE).toInt(), (spring.currentValue + ChatHeads.CLOSE_SIZE).toInt(), false)
+                bitmapBg = Managment.backgroundCloseIcon ?: Bitmap.createScaledBitmap(BitmapFactory.decodeResource(FloatingService.instance.resources, R.drawable.close_bg), (spring.currentValue + ChatHeads.CLOSE_SIZE).toInt(), (spring.currentValue + ChatHeads.CLOSE_SIZE).toInt(), false)
+                Managment.backgroundCloseIcon?.let {
+                    bitmapBg = Bitmap.createScaledBitmap(it, (spring.currentValue + ChatHeads.CLOSE_SIZE).toInt(), (spring.currentValue + ChatHeads.CLOSE_SIZE).toInt(), false)
+                }
                 invalidate()
             }
         })
@@ -91,7 +104,11 @@ class Close(var chatHeads: ChatHeads): View(chatHeads.context) {
     }
 
     override fun onDraw(canvas: Canvas?) {
-        canvas?.drawBitmap(bitmapBg, width / 2 - bitmapBg.width.toFloat() / 2, height / 2 - bitmapBg.height.toFloat() / 2, paint)
-        canvas?.drawBitmap(bitmapClose, width / 2 - bitmapClose.width.toFloat() / 2, height / 2 - bitmapClose.height.toFloat() / 2, paint)
+        bitmapBg?.let {
+            canvas?.drawBitmap(it, width / 2 - it.width.toFloat() / 2, height / 2 - it.height.toFloat() / 2, paint)
+        }
+        bitmapClose?.let {
+            canvas?.drawBitmap(it, width / 2 - it.width.toFloat() / 2, height / 2 - it.height.toFloat() / 2, paint)
+        }
     }
 }

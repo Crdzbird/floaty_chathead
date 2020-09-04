@@ -82,35 +82,82 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
             } else {
                 activity?.startService(
                         Intent(activity, FloatingService::class.java))
-                //activity?.moveTaskToBack(true)
             }
         }
         "isOpen" -> result.success(mBound)
         "close" -> if (mBound) release()
-        "setIconFromAsset" -> {
-            var demo = call.arguments as String
-            println(demo)
-            result.success(setIconFromAsset(demo))
-        }
-        else -> {
-          result.notImplemented()
-        }
+        "setIcon" -> result.success(setIconFromAsset(call.arguments as String))
+        "setBackgroundCloseIcon" -> result.success(setBackgroundCloseIconFromAsset(call.arguments as String))
+        "setCloseIcon" -> result.success(setCloseIconFromAsset(call.arguments as String))
+        else -> result.notImplemented()
     }
   }
+
+  private fun setBackgroundCloseIconFromAsset(assetPath:String):Int {
+    var result = -1
+    try
+    {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+      {
+        val inputStream = activity!!.applicationContext.getAssets().open("flutter_assets/" + assetPath)
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+        Managment.backgroundCloseIcon = bitmap
+        result = 1
+      }
+      else
+      {
+        val assetLookupKey = FlutterLoader.getInstance().getLookupKeyForAsset(assetPath)
+        val assetManager = activity!!.applicationContext.getAssets()
+        val assetFileDescriptor = assetManager.openFd(assetLookupKey)
+        val inputStream = assetFileDescriptor.createInputStream()
+          Managment.backgroundCloseIcon = BitmapFactory.decodeStream(inputStream)
+        result = 1
+      }
+    }
+    catch (e:IOException) {
+      e.printStackTrace()
+    }
+    return result
+}
+
+
+private fun setCloseIconFromAsset(assetPath:String):Int {
+  var result = -1
+  try
+  {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+    {
+      val inputStream = activity!!.applicationContext.getAssets().open("flutter_assets/" + assetPath)
+      val bitmap = BitmapFactory.decodeStream(inputStream)
+      Managment.closeIcon = bitmap
+      result = 1
+    }
+    else
+    {
+      val assetLookupKey = FlutterLoader.getInstance().getLookupKeyForAsset(assetPath)
+      val assetManager = activity!!.applicationContext.getAssets()
+      val assetFileDescriptor = assetManager.openFd(assetLookupKey)
+      val inputStream = assetFileDescriptor.createInputStream()
+        Managment.closeIcon = BitmapFactory.decodeStream(inputStream)
+      result = 1
+    }
+  }
+  catch (e:IOException) {
+    e.printStackTrace()
+  }
+  return result
+}
 
   private fun setIconFromAsset(assetPath:String):Int {
     var result = -1
     try
     {
-        println("insideSetIconFromAsset")
-      //val wm = WallpaperManager.getInstance(context)
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
       {
         val inputStream = activity!!.applicationContext.getAssets().open("flutter_assets/" + assetPath)
         val bitmap = BitmapFactory.decodeStream(inputStream)
         Managment.floatingIcon = bitmap
         result = 1
-        //result = wm.setBitmap(bitmap, null, false, wallpaperLocation)
       }
       else
       {
@@ -119,7 +166,6 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
         val assetFileDescriptor = assetManager.openFd(assetLookupKey)
         val inputStream = assetFileDescriptor.createInputStream()
           Managment.floatingIcon = BitmapFactory.decodeStream(inputStream)
-        //wm.setStream(inputStream)
         result = 1
       }
     }

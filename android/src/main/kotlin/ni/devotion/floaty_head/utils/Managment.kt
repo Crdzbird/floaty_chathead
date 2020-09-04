@@ -4,4 +4,6 @@ import android.graphics.Bitmap
 
 object Managment {
     var floatingIcon: Bitmap? = null
+    var closeIcon: Bitmap? = null
+    var backgroundCloseIcon: Bitmap? = null
 }

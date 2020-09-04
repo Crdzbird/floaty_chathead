@@ -33,7 +33,13 @@ class _Home extends State<Home> {
                   onPressed: () => closeFloatyHead()),
               RaisedButton(
                   child: Text('Set icon Floaty Chathead'),
-                  onPressed: () => setIconFromAsset()),
+                  onPressed: () => setIcon()),
+              RaisedButton(
+                  child: Text('Set close icon Floaty Chathead'),
+                  onPressed: () => setCloseIcon()),
+              RaisedButton(
+                  child: Text('Set close background Icon Floaty Chathead'),
+                  onPressed: () => setCloseIconBackground()),
             ],
           ),
         ),
@@ -45,21 +51,39 @@ class _Home extends State<Home> {
     }
   }
 
-  Future<void> setIconFromAsset() async {
+  Future<void> setIcon() async {
     String result;
     String assetPath = "assets/tmp1.jpg";
-    // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      result = await floatyHead.setIconFromAsset(assetPath);
+      result = await floatyHead.setIcon(assetPath);
       print(result);
     } on PlatformException {
-      result = 'Failed to get wallpaper.';
+      result = 'Failed to get icon.';
     }
+    if (!mounted) return;
+  }
 
-    print(result);
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
+  Future<void> setCloseIcon() async {
+    String result;
+    String assetPath = "assets/tmp1.jpg";
+    try {
+      result = await floatyHead.setCloseIcon(assetPath);
+      print(result);
+    } on PlatformException {
+      result = 'Failed to get icon.';
+    }
+    if (!mounted) return;
+  }
+
+  Future<void> setCloseIconBackground() async {
+    String result;
+    String assetPath = "assets/tmp1.jpg";
+    try {
+      result = await floatyHead.setCloseBackgroundIcon(assetPath);
+      print(result);
+    } on PlatformException {
+      result = 'Failed to get icon.';
+    }
     if (!mounted) return;
   }
 }

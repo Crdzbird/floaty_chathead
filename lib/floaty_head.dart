@@ -28,12 +28,20 @@ class FloatyHead {
 
   void setCallback(Timer callback) => _callback = callback;
 
-  Future<String> setIconFromAsset(String assetPath) async {
-    final int result =
-        await _platform.invokeMethod('setIconFromAsset', assetPath);
+  Future<String> setIcon(String assetPath) async {
+    final int result = await _platform.invokeMethod('setIcon', assetPath);
+    return result > 0 ? "Icon set" : "There was an error.";
+  }
 
-    /// Function returns the set String as result, use for debugging
-    return result > 0 ? "Wallpaper set" : "There was an error.";
+  Future<String> setCloseIcon(String assetPath) async {
+    final int result = await _platform.invokeMethod('setCloseIcon', assetPath);
+    return result > 0 ? "Close Icon set" : "There was an error.";
+  }
+
+  Future<String> setCloseBackgroundIcon(String assetPath) async {
+    final int result =
+        await _platform.invokeMethod('setBackgroundCloseIcon', assetPath);
+    return result > 0 ? "Close Icon Background set" : "There was an error.";
   }
 
   void closeHead() {
