@@ -40,6 +40,13 @@ class _Home extends State<Home> {
               RaisedButton(
                   child: Text('Set close background Icon Floaty Chathead'),
                   onPressed: () => setCloseIconBackground()),
+              RaisedButton(
+                  child: Text(
+                      'Set notification title to: OH MY GOD! THEY KILL KENNY!!! Floaty Chathead'),
+                  onPressed: () => setNotificationTitle()),
+              RaisedButton(
+                  child: Text('Set notification Icon Floaty Chathead'),
+                  onPressed: () => setNotificationIcon()),
             ],
           ),
         ),
@@ -51,12 +58,35 @@ class _Home extends State<Home> {
     }
   }
 
+  Future<void> setNotificationTitle() async {
+    String result;
+    try {
+      result = await floatyHead
+          .setNotificationTitle("OH MY GOD! THEY KILL KENNY!!!");
+    } on PlatformException {
+      result = 'Failed to get icon.';
+    }
+    if (!mounted) return;
+  }
+
+  Future<void> setNotificationIcon() async {
+    String result;
+    String assetPath = "assets/notificationIcon.png";
+    try {
+      result = await floatyHead.setNotificationIcon(assetPath);
+      print(result);
+    } on PlatformException {
+      result = 'Failed to get icon.';
+      print("failed: $result");
+    }
+    if (!mounted) return;
+  }
+
   Future<void> setIcon() async {
     String result;
-    String assetPath = "assets/tmp1.jpg";
+    String assetPath = "assets/chatheadIcon.png";
     try {
       result = await floatyHead.setIcon(assetPath);
-      print(result);
     } on PlatformException {
       result = 'Failed to get icon.';
     }
@@ -64,25 +94,21 @@ class _Home extends State<Home> {
   }
 
   Future<void> setCloseIcon() async {
-    String result;
-    String assetPath = "assets/tmp1.jpg";
+    String assetPath = "assets/close.png";
     try {
-      result = await floatyHead.setCloseIcon(assetPath);
-      print(result);
+      await floatyHead.setCloseIcon(assetPath);
     } on PlatformException {
-      result = 'Failed to get icon.';
+      return;
     }
     if (!mounted) return;
   }
 
   Future<void> setCloseIconBackground() async {
-    String result;
-    String assetPath = "assets/tmp1.jpg";
+    String assetPath = "assets/closeBg.png";
     try {
-      result = await floatyHead.setCloseBackgroundIcon(assetPath);
-      print(result);
+      await floatyHead.setCloseBackgroundIcon(assetPath);
     } on PlatformException {
-      result = 'Failed to get icon.';
+      return;
     }
     if (!mounted) return;
   }
