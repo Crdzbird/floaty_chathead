@@ -71,39 +71,40 @@ class HeaderView(private val context: Context, private val headerMap: Map<String
             linearLayout.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             val titleMap = getMapFromObject(headerMap, KEY_TITLE)
             val subTitleMap = getMapFromObject(headerMap, KEY_SUBTITLE)
-            //val buttonMap = getMapFromObject(headerMap, KEY_BUTTON)
-            //val padding = getPadding(context, headerMap[KEY_PADDING])
-            //linearLayout.setPadding(padding.left, padding.top, padding.right, padding.bottom)
-            //val isShowButton = buttonMap != null
+            val buttonMap = getMapFromObject(headerMap, KEY_BUTTON)
+            val padding = getPadding(context, headerMap[KEY_PADDING])
+            linearLayout.setPadding(padding.left, padding.top, padding.right, padding.bottom)
+            val isShowButton = buttonMap != null
             assert(titleMap != null)
             val textColumn = createTextColumn(titleMap, subTitleMap)
-            /*if (isShowButton) {
+            if (isShowButton) {
                 val buttonPosition = headerMap[KEY_BUTTON_POSITION] as String?
                 val button = getButtonView(context, buttonMap)
                 if ("leading" == buttonPosition) {
                     linearLayout.addView(button)
-                    if (textColumn != null) {
-                        linearLayout.addView(textColumn)
+                    textColumn?.let{
+                        linearLayout.addView(it)
                     }
                 } else {
-                    if (textColumn != null) {
+                    textColumn?.let{
                         val param = LinearLayout.LayoutParams(
                                 ViewGroup.LayoutParams.WRAP_CONTENT,
                                 ViewGroup.LayoutParams.WRAP_CONTENT,
                                 1.0f
                         )
-                        textColumn.layoutParams = param
-                        linearLayout.addView(textColumn)
+                        it.layoutParams = param
+                        linearLayout.addView(it)
                     }
                     linearLayout.addView(button)
                 }
-            } else {*/
+            } else {
                 linearLayout.addView(textColumn)
-            //}
+            }
             return linearLayout
         }
 
-    private fun createTextColumn(titleMap: Map<String, Any>?, subTitleMap: Map<String, Any>?): View? {
+
+    fun createTextColumn(titleMap: Map<String, Any>?, subTitleMap: Map<String, Any>?): View? {
         val titleView = getTextView(context, titleMap)
         if (subTitleMap != null) {
             val linearLayout = LinearLayout(context)

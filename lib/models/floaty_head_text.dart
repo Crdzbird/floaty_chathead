@@ -1,14 +1,14 @@
-import 'package:floaty_head/models/system_window_padding.dart';
+import 'package:floaty_head/floaty_head.dart';
 import 'package:flutter/material.dart';
 
-class SystemWindowText {
+class FloatyHeadText {
   String text;
   double fontSize;
   Color textColor;
   FontWeight fontWeight;
-  SystemWindowPadding padding;
+  FloatyHeadPadding padding;
 
-  SystemWindowText(
+  FloatyHeadText(
       {@required this.text,
       this.fontSize,
       this.fontWeight,
@@ -20,7 +20,7 @@ class SystemWindowText {
     final Map<String, dynamic> map = <String, dynamic>{
       'text': text,
       'fontSize': fontSize ?? 14.0,
-      'fontWeight': "bold",
+      'fontWeight': Commons.getFontWeight(fontWeight),
       'textColor': textColor?.value ?? Colors.black.value,
       'padding': padding?.getMap(),
     };

@@ -3,6 +3,7 @@ package ni.devotion.floaty_head.utils
 object Constants {
 
     val CHANNEL = "ni.devotion.floaty_head"
+    val METHOD_CHANNEL = "ni.devotion/floaty_head"
     val BACKGROUND_CHANNEL = "ni.devotion.floaty_head/background"
 
     val SHARED_PREF_SYSTEM_ALERT_WINDOW = "ni.devotion.floaty_head"

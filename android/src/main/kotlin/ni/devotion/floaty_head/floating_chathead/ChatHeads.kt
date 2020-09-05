@@ -373,6 +373,7 @@ class ChatHeads(context: Context) : View.OnTouchListener, FrameLayout(context) {
                 postDelayed({
                     close.hide()
                     if (captured) {
+                        content.removeAllViews()
                         hideChatHeads(true)
                     }
                 }, 200)

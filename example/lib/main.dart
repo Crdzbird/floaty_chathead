@@ -15,18 +15,18 @@ class Home extends StatefulWidget {
 class _Home extends State<Home> {
   final FloatyHead floatyHead = FloatyHead();
 
-  final header = SystemWindowHeader(
-    title: SystemWindowText(
+  final header = FloatyHeadHeader(
+    title: FloatyHeadText(
         text: "Outgoing Call", fontSize: 10, textColor: Colors.black45),
-    padding: SystemWindowPadding.setSymmetricPadding(12, 12),
-    subTitle: SystemWindowText(
+    padding: FloatyHeadPadding.setSymmetricPadding(12, 12),
+    subTitle: FloatyHeadText(
         text: "8989898989",
         fontSize: 14,
         fontWeight: FontWeight.bold,
         textColor: Colors.black87),
-    decoration: SystemWindowDecoration(startColor: Colors.grey[100]),
-    button: SystemWindowButton(
-        text: SystemWindowText(
+    decoration: FloatyHeadDecoration(startColor: Colors.grey[100]),
+    button: FloatyHeadButton(
+        text: FloatyHeadText(
             text: "Personal", fontSize: 10, textColor: Colors.black45),
         tag: "personal_btn"),
   );
@@ -36,6 +36,7 @@ class _Home extends State<Home> {
   @override
   void initState() {
     super.initState();
+    FloatyHead.registerOnClickListener(callBack);
   }
 
   @override
@@ -78,7 +79,7 @@ class _Home extends State<Home> {
       );
 
   void setCustomHeader() {
-    floatyHead.updateSystemWindow(header: header);
+    floatyHead.updateFloatyHeadContent(header: header);
   }
 
   void closeFloatyHead() {
@@ -144,11 +145,12 @@ class _Home extends State<Home> {
 }
 
 void callBack(String tag) {
+  print('ME HAN LLAMADO!!! $tag');
   print(tag);
   switch (tag) {
     case "simple_button":
     case "updated_simple_button":
-      //FloatyHead.closeSystemWindow();
+      //FloatyHead.closeFloatyHead();
       break;
     case "focus_button":
       print("Focus button has been called");

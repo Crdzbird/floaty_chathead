@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
-class SystemWindowDecoration {
+class FloatyHeadDecoration {
   Color startColor;
   Color endColor;
   int borderWidth;
   double borderRadius;
   Color borderColor;
 
-  SystemWindowDecoration(
-      {this.startColor,
-      this.endColor,
-      this.borderWidth,
-      this.borderRadius,
-      this.borderColor});
+  FloatyHeadDecoration({
+    this.startColor,
+    this.endColor,
+    this.borderWidth,
+    this.borderRadius,
+    this.borderColor,
+  });
 
   Map<String, dynamic> getMap() {
     final Map<String, dynamic> map = <String, dynamic>{

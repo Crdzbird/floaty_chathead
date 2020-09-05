@@ -68,7 +68,7 @@ object UiBuilder {
     }
 
     fun getButtonView(context: Context?, buttonMap: Map<String, Any>?): Button? {
-        if (buttonMap == null) return null
+        buttonMap ?: return null
         val button = Button(context)
         val buttonText = getTextView(context, Commons.getMapFromObject(buttonMap, KEY_TEXT))!!
         button.text = buttonText.text
@@ -87,9 +87,15 @@ object UiBuilder {
         val padding: Padding = getPadding(context, buttonMap[KEY_PADDING])
         button.setPadding(padding.left, padding.top, padding.right, padding.bottom)
         val decoration: Decoration? = getDecoration(context, buttonMap[KEY_DECORATION])
-        if (decoration != null) {
-            val gd = getGradientDrawable(decoration)
+        decoration?.let{
+            val gd = getGradientDrawable(it)
             button.background = gd
+        }
+        button.setOnClickListener {
+            if(!FloatyHeadPlugin.instance.sIsIsolateRunning.get()){
+                FloatyHeadPlugin.instance.startCallBackHandler(context)
+            }
+            FloatyHeadPlugin.instance.invokeCallBack(context, CALLBACK_TYPE_ONCLICK, tag!!)
         }
         return button
     }

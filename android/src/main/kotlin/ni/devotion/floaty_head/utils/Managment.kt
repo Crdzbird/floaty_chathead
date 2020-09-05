@@ -17,5 +17,7 @@ object Managment {
     var bodyMap: Map<String, Any>? = null
     var footerMap: Map<String, Any>? = null
     var headerView: View? = null
+    var bodyView: View? = null
+    var footerView: View? = null
     var layoutParams: FrameLayout.LayoutParams? = null
 }

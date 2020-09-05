@@ -24,20 +24,4 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
   }
-
-    fun configureUI(mContext: Context) {
-        headersMap = getMapFromObject(paramsMap!!, KEY_HEADER)
-        bodyMap = getMapFromObject(paramsMap!!, KEY_BODY)
-        footerMap = getMapFromObject(paramsMap!!, KEY_FOOTER)
-        headerView = HeaderView(mContext, headersMap!!).view
-        //val bodyView: LinearLayout = BodyView(mContext, bodyMap).getView()
-        //val footerView: LinearLayout = FooterView(mContext, footerMap).getView()
-        //bubbleLayout.setBackgroundColor(Color.WHITE)
-        layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT)
-        /*bubbleLayout.setLayoutParams(params)
-        bubbleLayout.addView(headerView)
-        bubbleLayout.addView(bodyView)
-        bubbleLayout.addView(footerView)*/
-    }
 }

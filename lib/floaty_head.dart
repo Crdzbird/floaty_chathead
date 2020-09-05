@@ -2,21 +2,49 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
-export 'models/system_window_body.dart';
-export 'models/system_window_button.dart';
-export 'models/system_window_decoration.dart';
-export 'models/system_window_footer.dart';
-export 'models/system_window_header.dart';
-export 'models/system_window_margin.dart';
-export 'models/system_window_padding.dart';
-export 'models/system_window_text.dart';
+export 'models/floaty_head_body.dart';
+export 'models/floaty_head_button.dart';
+export 'models/floaty_head_decoration.dart';
+export 'models/floaty_head_footer.dart';
+export 'models/floaty_head_header.dart';
+export 'models/floaty_head_margin.dart';
+export 'models/floaty_head_padding.dart';
+export 'models/floaty_head_text.dart';
+export 'utils/commons.dart';
 
-import 'package:floaty_head/models/system_window_body.dart';
-import 'package:floaty_head/models/system_window_footer.dart';
-import 'package:floaty_head/models/system_window_header.dart';
-import 'package:floaty_head/models/system_window_margin.dart';
+import 'package:floaty_head/models/floaty_head_body.dart';
+import 'package:floaty_head/models/floaty_head_footer.dart';
+import 'package:floaty_head/models/floaty_head_header.dart';
+import 'package:floaty_head/models/floaty_head_margin.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+
+enum FloatyHeadGravity {
+  top,
+  bottom,
+  center,
+}
+
+enum ContentGravity {
+  left,
+  right,
+  center,
+}
+
+enum ButtonPosition {
+  trailing,
+  leading,
+  center,
+}
+
+enum FontWeight {
+  normal,
+  bold,
+  italic,
+  bold_italic,
+}
+
+typedef void OnClickListener(String tag);
 
 class FloatyHead {
   bool _isOpen = false;
@@ -24,12 +52,13 @@ class FloatyHead {
   Timer _timer;
   bool get isOpen => _isOpen;
   Timer get callback => _callback;
+  static const _platform = const MethodChannel('ni.devotion/floaty_head');
 
   FloatyHead() {
     if (!Platform.isAndroid)
       throw PlatformException(code: 'Floaty Head only available for Android');
   }
-  static const _platform = const MethodChannel('ni.devotion/floaty_head');
+
   void openBubble() async {
     _platform.invokeMethod('start');
     _timer = Timer.periodic(Duration(seconds: 1), (timer) async {
@@ -38,6 +67,31 @@ class FloatyHead {
         timer?.cancel();
       }
     });
+  }
+
+  static Future<bool> registerOnClickListener(
+      OnClickListener callBackFunction) async {
+    final callBackDispatcher =
+        PluginUtilities.getCallbackHandle(callbackDispatcher);
+    final callBack = PluginUtilities.getCallbackHandle(callBackFunction);
+    _platform.setMethodCallHandler((MethodCall call) {
+      print("Got callback");
+      switch (call.method) {
+        case "callBack":
+          dynamic arguments = call.arguments;
+          if (arguments is List) {
+            final type = arguments[0];
+            if (type == "onClick") {
+              final tag = arguments[1];
+              callBackFunction(tag);
+            }
+          }
+      }
+      return null;
+    });
+    await _platform.invokeMethod("registerCallBackHandler",
+        <dynamic>[callBackDispatcher.toRawHandle(), callBack.toRawHandle()]);
+    return true;
   }
 
   Future<String> setIcon(String assetPath) async {
@@ -77,11 +131,11 @@ class FloatyHead {
       throw Exception('Floaty Head not running');
   }
 
-  Future<bool> updateSystemWindow({
-    @required SystemWindowHeader header,
-    SystemWindowBody body,
-    SystemWindowFooter footer,
-    SystemWindowMargin margin,
+  Future<bool> updateFloatyHeadContent({
+    @required FloatyHeadHeader header,
+    FloatyHeadBody body,
+    FloatyHeadFooter footer,
+    FloatyHeadMargin margin,
     int width,
     int height,
   }) async {
@@ -95,6 +149,23 @@ class FloatyHead {
       'width': width ?? -1,
       'height': height ?? -2
     };
-    return await _platform.invokeMethod('updateSystemWindow', params);
+    return await _platform.invokeMethod('setFloatyHeadContent', params);
   }
+}
+
+void callbackDispatcher() {
+  const MethodChannel _backgroundChannel =
+      const MethodChannel('ni.devotion/floaty_head');
+  WidgetsFlutterBinding.ensureInitialized();
+  _backgroundChannel.setMethodCallHandler((MethodCall call) async {
+    final args = call.arguments;
+    final Function callback = PluginUtilities.getCallbackFromHandle(
+        CallbackHandle.fromRawHandle(args[0]));
+    assert(callback != null);
+    final type = args[1];
+    if (type == "onClick") {
+      final tag = args[2];
+      callback(tag);
+    }
+  });
 }

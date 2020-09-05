@@ -1,14 +1,15 @@
-import 'package:floaty_head/models/system_window_decoration.dart';
-import 'package:floaty_head/models/system_window_margin.dart';
-import 'package:floaty_head/models/system_window_padding.dart';
-import 'package:floaty_head/models/system_window_text.dart';
+import 'package:floaty_head/floaty_head.dart';
 
-class SystemWindowBody {
+class FloatyHeadBody {
   List<EachRow> rows;
-  SystemWindowPadding padding;
-  SystemWindowDecoration decoration;
+  FloatyHeadPadding padding;
+  FloatyHeadDecoration decoration;
 
-  SystemWindowBody({this.rows, this.padding, this.decoration});
+  FloatyHeadBody({
+    this.rows,
+    this.padding,
+    this.decoration,
+  });
 
   Map<String, dynamic> getMap() {
     final Map<String, dynamic> map = <String, dynamic>{
@@ -24,11 +25,17 @@ class SystemWindowBody {
 
 class EachRow {
   List<EachColumn> columns;
-  SystemWindowPadding padding;
-  SystemWindowMargin margin;
-  SystemWindowDecoration decoration;
+  FloatyHeadPadding padding;
+  FloatyHeadMargin margin;
+  ContentGravity gravity;
+  FloatyHeadDecoration decoration;
 
-  EachRow({this.columns, this.padding, this.margin, this.decoration});
+  EachRow({
+    this.columns,
+    this.padding,
+    this.margin,
+    this.decoration,
+  });
 
   Map<String, dynamic> getMap() {
     final Map<String, dynamic> map = <String, dynamic>{
@@ -37,20 +44,25 @@ class EachRow {
           : List<dynamic>.from(columns.map((x) => x?.getMap())),
       'padding': padding?.getMap(),
       'margin': margin?.getMap(),
-      'gravity': "CENTER",
-      'decoration': decoration?.getMap()
+      'gravity': Commons.getContentGravity(gravity),
+      'decoration': decoration?.getMap(),
     };
     return map;
   }
 }
 
 class EachColumn {
-  SystemWindowText text;
-  SystemWindowPadding padding;
-  SystemWindowMargin margin;
-  SystemWindowDecoration decoration;
+  FloatyHeadText text;
+  FloatyHeadPadding padding;
+  FloatyHeadMargin margin;
+  FloatyHeadDecoration decoration;
 
-  EachColumn({this.text, this.padding, this.margin, this.decoration});
+  EachColumn({
+    this.text,
+    this.padding,
+    this.margin,
+    this.decoration,
+  });
 
   Map<String, dynamic> getMap() {
     final Map<String, dynamic> map = <String, dynamic>{
