@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.IBinder
 import android.provider.Settings
 import android.util.Log
+import android.widget.FrameLayout
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.loader.FlutterLoader
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -27,8 +28,17 @@ import io.flutter.view.FlutterMain
 import io.flutter.view.FlutterNativeView
 import io.flutter.view.FlutterRunArguments
 import ni.devotion.floaty_head.services.FloatingService
+import ni.devotion.floaty_head.utils.Commons.getMapFromObject
 import ni.devotion.floaty_head.utils.Constants
+import ni.devotion.floaty_head.utils.Constants.INTENT_EXTRA_PARAMS_MAP
+import ni.devotion.floaty_head.utils.Constants.KEY_HEADER
 import ni.devotion.floaty_head.utils.Managment
+import ni.devotion.floaty_head.utils.Managment.bodyMap
+import ni.devotion.floaty_head.utils.Managment.footerMap
+import ni.devotion.floaty_head.utils.Managment.headerView
+import ni.devotion.floaty_head.utils.Managment.headersMap
+import ni.devotion.floaty_head.utils.Managment.layoutParams
+import ni.devotion.floaty_head.views.HeaderView
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
@@ -55,6 +65,7 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
     private var context:Context? = null
     private var sBackgroundFlutterView: FlutterNativeView? = null
     private var sPluginRegistrantCallback: PluginRegistry.PluginRegistrantCallback? = null
+    var sIntent: Intent? = null
     var sIsIsolateRunning = AtomicBoolean(false)
 
 
@@ -64,30 +75,8 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
         channel!!.setMethodCallHandler(FloatyHeadPlugin())
     }
 
-    fun invokeCallBackToFlutter(channel: MethodChannel, method: String, arguments: List<Any>, retries: IntArray) {
-        channel.invokeMethod(method, arguments, object : MethodChannel.Result {
-            override fun success(o: Any?) {
-                Log.i("TAG", "Invoke call back success")
-            }
-
-            override fun error(s: String?, s1: String?, o: Any?) {
-                Log.e("TAG", "Error $s  $s1")
-            }
-
-            override fun notImplemented() {
-                //To fix the dart initialization delay.
-                if (retries[0] > 0) {
-                    Log.d("TAG", "Not Implemented method $method. Trying again to check if it works")
-                    invokeCallBackToFlutter(channel, method, arguments, retries)
-                } else {
-                    Log.e("TAG", "Not Implemented method $method")
-                }
-                retries[0]--
-            }
-        })
-    }
-
     private fun connect(call: MethodCall?) {
+        sIntent = Intent(activity, FloatingService::class.java)
         connection = object : ServiceConnection {
             override fun onServiceConnected(className: ComponentName, service: IBinder) {
             val binder = service as FloatingService.LocalBinder
@@ -99,77 +88,10 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
             mBound = false
         }
     }
-    Intent(activity, FloatingService::class.java).also { intent ->
+    sIntent.also { intent ->
         if (connection != null) activity?.bindService(intent, connection!!, 0)
     }
   }
-
-
-    fun invokeCallBack(context: Context, type: String, params: Any) {
-        val argumentsList: MutableList<Any> = ArrayList()
-        Log.v("TAG", "invoking callback for TAG $params")
-        val preferences = context.getSharedPreferences(Constants.SHARED_PREF_SYSTEM_ALERT_WINDOW, 0)
-        val codeCallBackHandle = preferences.getLong(Constants.CODE_CALLBACK_HANDLE_KEY, -1)
-        //Log.i("TAG", "codeCallBackHandle " + codeCallBackHandle);
-        if (codeCallBackHandle == -1L) {
-            Log.e("TAG", "invokeCallBack failed, as codeCallBackHandle is null")
-        } else {
-            argumentsList.clear()
-            argumentsList.add(codeCallBackHandle)
-            argumentsList.add(type)
-            argumentsList.add(params)
-            if (sIsIsolateRunning.get()) {
-                if (channel == null) {
-                    Log.v("TAG", "Recreating the background channel as it is null")
-                    channel = MethodChannel(sBackgroundFlutterView, Constants.BACKGROUND_CHANNEL)
-                }
-                try {
-                    Log.v("TAG", "Invoking on method channel")
-                    val retries = intArrayOf(2)
-                    invokeCallBackToFlutter(channel!!, "callBack", argumentsList, retries)
-                    //backgroundChannel.invokeMethod("callBack", argumentsList);
-                } catch (ex: Exception) {
-                    Log.e("TAG", "Exception in invoking callback $ex")
-                }
-            } else {
-                Log.e("TAG", "invokeCallBack failed, as isolate is not running")
-            }
-        }
-    }
-
-    fun startCallBackHandler(context: Context) {
-        val preferences = context.getSharedPreferences(Constants.SHARED_PREF_SYSTEM_ALERT_WINDOW, 0)
-        val callBackHandle = preferences.getLong(Constants.CALLBACK_HANDLE_KEY, -1)
-        Log.d("CALL", "onClickCallBackHandle $callBackHandle")
-        if (callBackHandle != -1L) {
-            FlutterMain.ensureInitializationComplete(context, null)
-            val mAppBundlePath: String = FlutterMain.findAppBundlePath()
-            val flutterCallback: FlutterCallbackInformation = FlutterCallbackInformation.lookupCallbackInformation(callBackHandle)
-            if (sBackgroundFlutterView == null) {
-                sBackgroundFlutterView = FlutterNativeView(context, true)
-                if (mAppBundlePath != null && !sIsIsolateRunning.get()) {
-                    if (sPluginRegistrantCallback == null) {
-                        Log.i("CALL", "Unable to start callBackHandle... as plugin is not registered")
-                        return
-                    }
-                    Log.i("CALL", "Starting callBackHandle...")
-                    val args = FlutterRunArguments()
-                    args.bundlePath = mAppBundlePath
-                    args.entrypoint = flutterCallback.callbackName
-                    args.libraryPath = flutterCallback.callbackLibraryPath
-                    sBackgroundFlutterView!!.runFromBundle(args)
-                    sPluginRegistrantCallback!!.registerWith(sBackgroundFlutterView!!.getPluginRegistry())
-                    channel = MethodChannel(sBackgroundFlutterView, channelName)
-                    sIsIsolateRunning.set(true)
-                }
-            } else {
-                if (channel == null) {
-                    channel = MethodChannel(sBackgroundFlutterView, channelName)
-                }
-                sIsIsolateRunning.set(true)
-            }
-        }
-    }
 
     fun setPluginRegistrant(callback: PluginRegistry.PluginRegistrantCallback) {
         sPluginRegistrantCallback = callback
@@ -191,8 +113,7 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
                         Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName")),
                         CODE_DRAW_OVER_OTHER_APP_PERMISSION)
             } else {
-                activity?.startService(
-                        Intent(activity, FloatingService::class.java))
+                activity?.startService(sIntent)
             }
         }
         "isOpen" -> result.success(mBound)
@@ -202,6 +123,42 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
         "setCloseIcon" -> result.success(setCloseIconFromAsset(call.arguments as String))
         "setNotificationTitle" -> result.success(setNotificationTitle(call.arguments as String))
         "setNotificationIcon" -> result.success(setNotificationIcon(call.arguments as String))
+        "updateSystemWindow" -> {
+            assert((call.arguments != null))
+val updateParams = call.arguments as HashMap<String, Any>
+if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q)
+{
+  Log.d("TAG", "Going to update System Alert Window")
+
+  headersMap = getMapFromObject(updateParams, KEY_HEADER)
+  println(headersMap)
+  try{
+    headerView = HeaderView(activity!!.applicationContext, headersMap!!).view
+  }catch(except: Exception){
+      println("KABOOOOMMM")
+      println(except)
+      println("-----------------------------------------------------------")
+  }
+  //val bodyView: LinearLayout = BodyView(mContext, bodyMap).getView()
+  //val footerView: LinearLayout = FooterView(mContext, footerMap).getView()
+  //bubbleLayout.setBackgroundColor(Color.WHITE)
+  layoutParams = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+          FrameLayout.LayoutParams.WRAP_CONTENT)
+  //WindowService.enqueueWork(mContext, i);
+}
+else
+{
+  Log.d("TAG", "Going to update Bubble")
+  
+  headersMap = getMapFromObject(updateParams, KEY_HEADER)
+  println(headersMap)
+  headerView = HeaderView(activity!!.applicationContext, headersMap!!).view
+  //val bodyView: LinearLayout = BodyView(mContext, bodyMap).getView()
+  //val footerView: LinearLayout = FooterView(mContext, footerMap).getView()
+  //bubbleLayout.setBackgroundColor(Color.WHITE)
+}
+result.success(true)
+        }
         else -> result.notImplemented()
     }
   }

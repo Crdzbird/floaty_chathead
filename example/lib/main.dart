@@ -14,7 +14,29 @@ class Home extends StatefulWidget {
 
 class _Home extends State<Home> {
   final FloatyHead floatyHead = FloatyHead();
+
+  final header = SystemWindowHeader(
+    title: SystemWindowText(
+        text: "Outgoing Call", fontSize: 10, textColor: Colors.black45),
+    padding: SystemWindowPadding.setSymmetricPadding(12, 12),
+    subTitle: SystemWindowText(
+        text: "8989898989",
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+        textColor: Colors.black87),
+    decoration: SystemWindowDecoration(startColor: Colors.grey[100]),
+    button: SystemWindowButton(
+        text: SystemWindowText(
+            text: "Personal", fontSize: 10, textColor: Colors.black45),
+        tag: "personal_btn"),
+  );
+
   bool alternateColor = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -47,10 +69,17 @@ class _Home extends State<Home> {
               RaisedButton(
                   child: Text('Set notification Icon Floaty Chathead'),
                   onPressed: () => setNotificationIcon()),
+              RaisedButton(
+                  child: Text('Set Custom Header into Floaty Chathead'),
+                  onPressed: () => setCustomHeader()),
             ],
           ),
         ),
       );
+
+  void setCustomHeader() {
+    floatyHead.updateSystemWindow(header: header);
+  }
 
   void closeFloatyHead() {
     if (floatyHead.isOpen) {
@@ -111,5 +140,20 @@ class _Home extends State<Home> {
       return;
     }
     if (!mounted) return;
+  }
+}
+
+void callBack(String tag) {
+  print(tag);
+  switch (tag) {
+    case "simple_button":
+    case "updated_simple_button":
+      //FloatyHead.closeSystemWindow();
+      break;
+    case "focus_button":
+      print("Focus button has been called");
+      break;
+    default:
+      print("OnClick event of $tag");
   }
 }

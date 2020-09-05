@@ -91,12 +91,6 @@ object UiBuilder {
             val gd = getGradientDrawable(decoration)
             button.background = gd
         }
-        button.setOnClickListener { v: View? ->
-            if (!FloatyHeadPlugin.instance.sIsIsolateRunning.get()) {
-                FloatyHeadPlugin.instance.startCallBackHandler(context)
-            }
-            FloatyHeadPlugin().invokeCallBack(context, CALLBACK_TYPE_ONCLICK, tag!!)
-        }
         return button
     }
 

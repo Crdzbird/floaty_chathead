@@ -1,7 +1,22 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 
+export 'models/system_window_body.dart';
+export 'models/system_window_button.dart';
+export 'models/system_window_decoration.dart';
+export 'models/system_window_footer.dart';
+export 'models/system_window_header.dart';
+export 'models/system_window_margin.dart';
+export 'models/system_window_padding.dart';
+export 'models/system_window_text.dart';
+
+import 'package:floaty_head/models/system_window_body.dart';
+import 'package:floaty_head/models/system_window_footer.dart';
+import 'package:floaty_head/models/system_window_header.dart';
+import 'package:floaty_head/models/system_window_margin.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 class FloatyHead {
   bool _isOpen = false;
@@ -17,7 +32,6 @@ class FloatyHead {
   static const _platform = const MethodChannel('ni.devotion/floaty_head');
   void openBubble() async {
     _platform.invokeMethod('start');
-    setCallback(callback);
     _timer = Timer.periodic(Duration(seconds: 1), (timer) async {
       _isOpen = await _platform?.invokeMethod('isOpen') ?? false;
       if (!_isOpen) {
@@ -25,8 +39,6 @@ class FloatyHead {
       }
     });
   }
-
-  void setCallback(Timer callback) => _callback = callback;
 
   Future<String> setIcon(String assetPath) async {
     final int result = await _platform.invokeMethod('setIcon', assetPath);
@@ -58,7 +70,6 @@ class FloatyHead {
 
   void closeHead() {
     if (_isOpen) {
-      removeCallback();
       _platform.invokeMethod('close');
       _timer.cancel();
       _isOpen = false;
@@ -66,11 +77,24 @@ class FloatyHead {
       throw Exception('Floaty Head not running');
   }
 
-  void removeCallback() {
-    if (_isOpen) {
-      _callback?.cancel();
-      _callback = null;
-    } else
-      throw Exception('Floaty Head not running');
+  Future<bool> updateSystemWindow({
+    @required SystemWindowHeader header,
+    SystemWindowBody body,
+    SystemWindowFooter footer,
+    SystemWindowMargin margin,
+    int width,
+    int height,
+  }) async {
+    assert(header != null);
+    final Map<String, dynamic> params = <String, dynamic>{
+      'header': header.getMap(),
+      'body': body?.getMap(),
+      'footer': footer?.getMap(),
+      'margin': margin?.getMap(),
+      'gravity': 1.0,
+      'width': width ?? -1,
+      'height': height ?? -2
+    };
+    return await _platform.invokeMethod('updateSystemWindow', params);
   }
 }
