@@ -235,12 +235,11 @@ class _Home extends State<Home> {
 }
 
 void callBack(String tag) {
-  print('ME HAN LLAMADO!!! $tag');
+  print('CALLBACK FROM FRAGMENT BUILDED: $tag');
   print(tag);
   switch (tag) {
     case "simple_button":
     case "updated_simple_button":
-      //FloatyHead.closeFloatyHead();
       break;
     case "focus_button":
       print("Focus button has been called");

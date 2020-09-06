@@ -51,10 +51,9 @@ import java.util.concurrent.atomic.AtomicBoolean
 /* FloatyHeadPlugin */
 class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallHandler {
     companion object{
-      var sPluginRegistrantCallback: PluginRegistry.PluginRegistrantCallback? = null
         lateinit var instance: FloatyHeadPlugin
         fun setPluginRegistrant(callback: PluginRegistry.PluginRegistrantCallback) {
-          sPluginRegistrantCallback = callback
+          Managment.pluginRegistrantC = callback
       }
     }
     var callbackHandle: Long = -1L
@@ -155,9 +154,7 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
                     footerView = FooterView(activity!!.applicationContext, it).view
                 }
             } catch (except: Exception) {
-                println("KABOOOOMMM")
                 println(except)
-                println("-----------------------------------------------------------")
             }
             result.success(true)
         }
@@ -189,7 +186,7 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
             if (sBackgroundFlutterView == null) {
                 sBackgroundFlutterView = FlutterNativeView(context, true)
                 if (mAppBundlePath != null && !sIsIsolateRunning.get()) {
-                    if (sPluginRegistrantCallback == null) {
+                    if (Managment.pluginRegistrantC == null) {
                         Log.i("TAG", "Unable to start callBackHandle... as plugin is not registered")
                         return
                     }
@@ -199,7 +196,7 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
                     args.entrypoint = flutterCallback.callbackName
                     args.libraryPath = flutterCallback.callbackLibraryPath
                     sBackgroundFlutterView!!.runFromBundle(args)
-                    sPluginRegistrantCallback!!.registerWith(sBackgroundFlutterView!!.getPluginRegistry())
+                    Managment.pluginRegistrantC!!.registerWith(sBackgroundFlutterView!!.getPluginRegistry())
                     backgroundChannel = MethodChannel(sBackgroundFlutterView!!, channelName);
                     sIsIsolateRunning.set(true)
                 }
