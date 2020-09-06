@@ -236,7 +236,6 @@ class _Home extends State<Home> {
 
 void callBack(String tag) {
   print('CALLBACK FROM FRAGMENT BUILDED: $tag');
-  print(tag);
   switch (tag) {
     case "simple_button":
     case "updated_simple_button":
