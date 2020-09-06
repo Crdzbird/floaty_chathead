@@ -119,12 +119,13 @@ final footer = FloatyHeadFooter(
   );
 ```
 
-## PLUGIN STILL IN DEVELOPMENT (95% COMPLETED)
+## PLUGIN STILL IN DEVELOPMENT (100% COMPLETED)
 
 Currently you can use this plugin in your projects. however there's still some issues that aren't solved.
 
 DONE:
 - [x] PERMISSIONS ON FIRST RUN
+- [x] issue with button clicked to retrieve the tag of the button pressed from android into flutter.
 - [x] Custom Views for Header, Body, Footer
 - [x] Customization of Notification Text
 - [x] Customization of Notification Icon
@@ -134,7 +135,6 @@ DONE:
 
 
 TODO:
-- [ ] issue with button clicked to retrieve the tag of the button pressed.
 - [ ] Add customization to the gradient shadow displayed when the chathead is moved, currently is setted by default on a xml inside Android.
 
 
