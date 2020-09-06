@@ -1,7 +1,7 @@
 # Floaty_chathead
 One thing that i always love was the simplicity that messenger had using Chatheads.
 
-And for that reason this plugin was created with all the love that us the developers have :tw-1f496:
+And for that reason this plugin was created with all the love that us the developers have :heartbeat:
 
 [![](https://raw.githubusercontent.com/Crdzbird/floaty_chathead/master/screenshots/floaty_chathead.gif)](https://raw.githubusercontent.com/Crdzbird/floaty_chathead/master/screenshots/floaty_chathead.gif "Floaty Head in action ")
 
@@ -142,6 +142,6 @@ TODO:
 
 All contributions are welcome!
 
-If you like this project then please click on the :tw-1f31f: it'll be appreciated or if you wanna add more epic stuff you can submite your pull request and it'll be gladly accepted :tw-1f60e:
+If you like this project then please click on the :star2: it'll be appreciated or if you wanna add more epic stuff you can submite your pull request and it'll be gladly accepted :ok_man:
 
 or if you have an idea please let me know to my email: <luisalfonsocb83@gmail.com>.
