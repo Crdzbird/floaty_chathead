@@ -40,6 +40,8 @@ import ni.devotion.floaty_head.utils.Managment.footerView
 import ni.devotion.floaty_head.utils.Managment.headerView
 import ni.devotion.floaty_head.utils.Managment.headersMap
 import ni.devotion.floaty_head.utils.Managment.layoutParams
+import ni.devotion.floaty_head.views.BodyView
+import ni.devotion.floaty_head.views.FooterView
 import ni.devotion.floaty_head.views.HeaderView
 import java.io.IOException
 import java.util.*
@@ -59,6 +61,7 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
     var codeCallbackHandle: Long = -1L
     private var activity: Activity? = null
     private var channel: MethodChannel? = null
+    private var backgroundChannel: MethodChannel? = null
     private val channelName: String = "ni.devotion/floaty_head"
     private val CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084
     private var mOverlayService: FloatingService? = null
@@ -146,10 +149,10 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
                     headerView = HeaderView(activity!!.applicationContext, it).view
                 }
                 bodyMap?.let {
-                    bodyView = HeaderView(activity!!.applicationContext, it).view
+                    bodyView = BodyView(activity!!.applicationContext, it).view
                 }
                 footerMap?.let {
-                    footerView = HeaderView(activity!!.applicationContext, it).view
+                    footerView = FooterView(activity!!.applicationContext, it).view
                 }
             } catch (except: Exception) {
                 println("KABOOOOMMM")
@@ -197,9 +200,13 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
                     args.libraryPath = flutterCallback.callbackLibraryPath
                     sBackgroundFlutterView!!.runFromBundle(args)
                     sPluginRegistrantCallback!!.registerWith(sBackgroundFlutterView!!.getPluginRegistry())
+                    backgroundChannel = MethodChannel(sBackgroundFlutterView!!, channelName);
                     sIsIsolateRunning.set(true)
                 }
             } else {
+                if(backgroundChannel == null){
+                    backgroundChannel = MethodChannel(sBackgroundFlutterView, channelName)
+                }
                 sIsIsolateRunning.set(true)
             }
         }
@@ -217,15 +224,16 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
             argumentsList.add(type)
             argumentsList.add(params)
             if (sIsIsolateRunning.get()) {
-                if (channel == null) {
+
+                if(backgroundChannel == null){
                     Log.v("TAG", "Recreating the background channel as it is null")
-                    //channel = MethodChannel(sBackgroundFlutterView, channelName)
+                    backgroundChannel = MethodChannel(sBackgroundFlutterView, channelName)
                 }
                 try {
                     Log.v("TAG", "Invoking on method channel")
                     val retries = intArrayOf(2)
-                    invokeCallBackToFlutter(channel!!, "callBack", argumentsList, retries)
-                    //backgroundChannel.invokeMethod("callBack", argumentsList);
+                    invokeCallBackToFlutter(backgroundChannel!!, "callBack", argumentsList, retries)
+                    channel!!.invokeMethod("callBack", argumentsList);
                 } catch (ex: Exception) {
                     Log.e("TAG", "Exception in invoking callback $ex")
                 }

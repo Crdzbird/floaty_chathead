@@ -31,6 +31,92 @@ class _Home extends State<Home> {
         tag: "personal_btn"),
   );
 
+  final body = FloatyHeadBody(
+    rows: [
+      EachRow(
+        columns: [
+          EachColumn(
+            text: FloatyHeadText(
+                text: "Updated body", fontSize: 12, textColor: Colors.black45),
+          ),
+        ],
+        gravity: ContentGravity.center,
+      ),
+      EachRow(columns: [
+        EachColumn(
+          text: FloatyHeadText(
+              text: "Updated long data of the body",
+              fontSize: 12,
+              textColor: Colors.black87,
+              fontWeight: FontWeight.bold),
+          padding: FloatyHeadPadding.setSymmetricPadding(6, 8),
+          decoration: FloatyHeadDecoration(
+              startColor: Colors.black12, borderRadius: 25.0),
+          margin: FloatyHeadMargin(top: 4),
+        ),
+      ], gravity: ContentGravity.center),
+      EachRow(
+        columns: [
+          EachColumn(
+            text: FloatyHeadText(
+                text: "Notes", fontSize: 10, textColor: Colors.black45),
+          ),
+        ],
+        gravity: ContentGravity.left,
+        margin: FloatyHeadMargin(top: 8),
+      ),
+      EachRow(
+        columns: [
+          EachColumn(
+            text: FloatyHeadText(
+                text: "Updated random notes.",
+                fontSize: 13,
+                textColor: Colors.black54,
+                fontWeight: FontWeight.bold),
+          ),
+        ],
+        gravity: ContentGravity.left,
+      ),
+    ],
+    padding: FloatyHeadPadding(left: 16, right: 16, bottom: 12, top: 12),
+  );
+
+  FloatyHeadFooter footer = FloatyHeadFooter(
+    buttons: [
+      FloatyHeadButton(
+        text: FloatyHeadText(
+            text: "Simple button",
+            fontSize: 12,
+            textColor: Color.fromRGBO(250, 139, 97, 1)),
+        tag: "simple_button",
+        padding: FloatyHeadPadding(left: 10, right: 10, bottom: 10, top: 10),
+        width: 0,
+        height: FloatyHeadButton.WRAP_CONTENT,
+        decoration: FloatyHeadDecoration(
+            startColor: Colors.white,
+            endColor: Colors.white,
+            borderWidth: 0,
+            borderRadius: 0.0),
+      ),
+      FloatyHeadButton(
+        text: FloatyHeadText(
+            text: "Focus button", fontSize: 12, textColor: Colors.white),
+        tag: "focus_button",
+        width: 0,
+        padding: FloatyHeadPadding(left: 10, right: 10, bottom: 10, top: 10),
+        height: FloatyHeadButton.WRAP_CONTENT,
+        decoration: FloatyHeadDecoration(
+            startColor: Color.fromRGBO(250, 139, 97, 1),
+            endColor: Color.fromRGBO(247, 28, 88, 1),
+            borderWidth: 0,
+            borderRadius: 30.0),
+      )
+    ],
+    padding: FloatyHeadPadding(left: 16, right: 16, bottom: 12),
+    decoration: FloatyHeadDecoration(startColor: Colors.white),
+    buttonsPosition: ButtonPosition.center,
+  );
+
   bool alternateColor = false;
 
   @override
@@ -79,7 +165,11 @@ class _Home extends State<Home> {
       );
 
   void setCustomHeader() {
-    floatyHead.updateFloatyHeadContent(header: header);
+    floatyHead.updateFloatyHeadContent(
+      header: header,
+      body: body,
+      footer: footer,
+    );
   }
 
   void closeFloatyHead() {

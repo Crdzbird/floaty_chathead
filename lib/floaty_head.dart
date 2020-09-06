@@ -75,13 +75,15 @@ class FloatyHead {
         PluginUtilities.getCallbackHandle(callbackDispatcher);
     final callBack = PluginUtilities.getCallbackHandle(callBackFunction);
     _platform.setMethodCallHandler((MethodCall call) {
-      print("Got callback");
+      print("Got callback: ${call.method}");
       switch (call.method) {
         case "callBack":
           dynamic arguments = call.arguments;
+          print(arguments);
           if (arguments is List) {
             final type = arguments[0];
             if (type == "onClick") {
+              print("registerOnClickListener onClick:  ${arguments[1]}");
               final tag = arguments[1];
               callBackFunction(tag);
             }

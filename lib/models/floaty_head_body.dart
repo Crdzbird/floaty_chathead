@@ -34,6 +34,7 @@ class EachRow {
     this.columns,
     this.padding,
     this.margin,
+    this.gravity,
     this.decoration,
   });
 

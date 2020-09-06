@@ -62,7 +62,7 @@ object Commons {
         return fontWeight
     }
 
-    fun setMargin(context: Context?, params: LinearLayout.LayoutParams, map: Map<String?, Any?>) {
+    fun setMargin(context: Context?, params: LinearLayout.LayoutParams, map: Map<String, Any?>) {
         val margin: Margin = UiBuilder.getMargin(context, map[KEY_MARGIN])
         params.setMargins(margin.left, margin.top, margin.right, margin.bottom)
     }
