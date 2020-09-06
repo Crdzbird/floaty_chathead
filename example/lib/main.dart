@@ -81,7 +81,7 @@ class _Home extends State<Home> {
     padding: FloatyHeadPadding(left: 16, right: 16, bottom: 12, top: 12),
   );
 
-  FloatyHeadFooter footer = FloatyHeadFooter(
+  final footer = FloatyHeadFooter(
     buttons: [
       FloatyHeadButton(
         text: FloatyHeadText(
