@@ -1,20 +1,15 @@
 package ni.devotion.floaty_head.services
 
+import android.annotation.SuppressLint
 import android.app.*
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Icon
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
-import android.view.Gravity
-import android.view.WindowManager
-import android.widget.TextView
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import ni.devotion.floaty_head.FloatyHeadPlugin
+import ni.devotion.floaty_head.FloatyHeadPlugin.Companion.context
 import ni.devotion.floaty_head.R
 import ni.devotion.floaty_head.floating_chathead.ChatHeads
 import ni.devotion.floaty_head.utils.Managment
@@ -23,16 +18,43 @@ import ni.devotion.floaty_head.utils.Managment
 class FloatingService: Service() {
     companion object {
         lateinit var instance: FloatingService
+        var notificationManager: NotificationManager? = null
+        var notification: Notification? = null
     }
-    private var binder = LocalBinder()
-    lateinit var windowManager: WindowManager
-    var chatHeads: ChatHeads? = null
-    var notification: Notification? = null
+    val channel_id = "2208"
+    val floaty_notification_id = 2208
+    //var chatHeads: ChatHeads? = null
 
     override fun onCreate() {
         instance = this
-        windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        createNotificationChannel()
+        super.onCreate()
+    }
+
+    @SuppressLint("NewApi")
+    private fun initNotificationManager() {
+        notificationManager ?: run {
+            context?.let {
+                notificationManager = it.getSystemService(NotificationManager::class.java)
+            } ?: run {
+                Log.e("TAG", "Context is null. Can't show the System Alert Window")
+                return
+            }
+        }
+    }
+
+    fun createNotificationChannel() {
+        initNotificationManager()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val serviceChannel = NotificationChannel(
+                    channel_id,
+                    "Foreground Service Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            )
+            notificationManager?.createNotificationChannel(serviceChannel)
+        }
+    }
+
+    fun showNotificationManager() {
         val notificationIntent = Intent(this, FloatyHeadPlugin::class.java)
         val pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0)
@@ -49,48 +71,31 @@ class FloatingService: Service() {
                     .setContentIntent(pendingIntent)
                     .build()
         }
-
-        startForeground(1, notification)
-        chatHeads = ChatHeads(this)
-        chatHeads?.add()
-    }
-
-    fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val serviceChannel = NotificationChannel(
-                    "ForegroundServiceChannel",
-                    "Foreground Service Channel",
-                    NotificationManager.IMPORTANCE_DEFAULT
-            )
-            val manager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(serviceChannel)
-        }
+        startForeground(floaty_notification_id, notification)
     }
 
     override fun onDestroy() {
+        /*removeAllViews()
+        stopSelf()*/
         super.onDestroy()
-        removeAllViews()
-        stopSelf()
     }
 
-    fun removeAllViews() {
+    /*fun removeAllViews() {
         windowManager ?: return
         chatHeads?.let {
             windowManager.removeView(chatHeads)
             it.removeAllViews()
             chatHeads = null
         }
-    }
-
-    inner class LocalBinder : Binder() {
-        fun getService() = this@FloatingService
-    }
+    }*/
 
     override fun onBind(intent: Intent): IBinder? {
-        return binder
+        return null
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        return super.onStartCommand(intent, flags, Service.START_STICKY)
+        createNotificationChannel()
+        showNotificationManager()
+        return START_NOT_STICKY
     }
 }
