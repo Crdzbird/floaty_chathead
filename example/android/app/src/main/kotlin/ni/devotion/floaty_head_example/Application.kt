@@ -14,12 +14,11 @@ class Application : FlutterApplication(), PluginRegistry.PluginRegistrantCallbac
       override fun onCreate() {
           super.onCreate()
           FloatyHeadPlugin().setPluginRegistrant(this)
+          Managment.pluginRegistrantC = this
       }
 
      override fun registerWith(registry: PluginRegistry) {
-           //GeneratedPluginRegistrant.registerWith(registry as FlutterEngine)
         FloatyHeadPlugin().registerWith(registry.registrarFor(this.packageName))
-       // FloatyHeadPlugin().registerWith(registry.registrarFor("ni.devotion.floaty_head"))
      }
      
   }
