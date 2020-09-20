@@ -1,6 +1,8 @@
 import 'package:floaty_head/floaty_head.dart';
 import 'package:flutter/material.dart';
 
+/// This class is used to build any [Text] inside the [Body] that is gonna be displayed
+/// when the chathead is tapped.
 class FloatyHeadText {
   String text;
   double fontSize;

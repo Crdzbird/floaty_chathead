@@ -19,24 +19,63 @@ import 'package:floaty_head/models/floaty_head_margin.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+/// Set the [gravity] orientation for the header of the chathead
+///
+/// use [top] to position the content of the header
+/// to the upper side of the container.
+///
+/// use [bottom] to position the content of the header
+/// to the bottom side of the container.
+///
+/// use [center] to position the content of the header
+/// to the bottom side of the container.
 enum FloatyHeadGravity {
   top,
   bottom,
   center,
 }
 
+/// Set the [gravity] orientation for the body of the chathead
+///
+/// use [left] to position the content of the body
+/// to the Start side of the container.
+///
+/// use [right] to position the content of the body
+/// to the End side of the container.
+///
+/// use [center] to position the content of the body
+/// to the center of the container.
 enum ContentGravity {
   left,
   right,
   center,
 }
 
+/// Set the [position] for the buttons of the chathead
+///
+/// use [trailing] to position the button
+/// at the End of the container.
+///
+/// use [leading] to position the button
+/// at the Start of the container.
+///
+/// use [center] to position the button
+/// at the center of the container.
 enum ButtonPosition {
   trailing,
   leading,
   center,
 }
 
+/// Set the [Weight] for the text inside the chathead
+///
+/// use [normal] for w500 font.
+///
+/// use [bold] for w900 font.
+///
+/// use [italic] for a stylished font.
+///
+/// use [bold_italic] for a w900 font with stylished.
 enum FontWeight {
   normal,
   bold,
@@ -44,13 +83,24 @@ enum FontWeight {
   bold_italic,
 }
 
+/// This is called when a button is tapped, the return is gonna be.
+/// ```dart
+/// OnClickListener(String tag) => 'btn_ok';
+/// ```
 typedef void OnClickListener(String tag);
 
 class FloatyHead {
   bool _isOpen = false;
   Timer _callback;
   Timer _timer;
+
+  /// Return the [state] of the chathead
+  /// ```dart
+  /// bool get isOpen => true or false;
+  /// ```
   bool get isOpen => _isOpen;
+
+  /// The timer is used when an action is needed to perform after x time has passed.
   Timer get callback => _callback;
   static const _platform = const MethodChannel('ni.devotion/floaty_head');
 
@@ -59,6 +109,10 @@ class FloatyHead {
       throw PlatformException(code: 'Floaty Head only available for Android');
   }
 
+  /// Start the chathead.
+  /// also check constantly the current state of it.
+  ///
+  /// for that please use the method [isOpen].
   void openBubble() async {
     _platform.invokeMethod('start');
     _timer = Timer.periodic(Duration(seconds: 1), (timer) async {
@@ -69,21 +123,21 @@ class FloatyHead {
     });
   }
 
+  /// If a [widget] is [pressed] check the [type] of [tap].
+  /// and returns to the client-dart the component that has been pressed as a
+  /// [string] with his tag.
   static Future<bool> registerOnClickListener(
       OnClickListener callBackFunction) async {
     final callBackDispatcher =
         PluginUtilities.getCallbackHandle(callbackDispatcher);
     final callBack = PluginUtilities.getCallbackHandle(callBackFunction);
     _platform.setMethodCallHandler((MethodCall call) {
-      print("Got callback: ${call.method}");
       switch (call.method) {
         case "callBack":
           dynamic arguments = call.arguments;
-          print(arguments);
           if (arguments is List) {
             final type = arguments[0];
             if (type == "onClick") {
-              print("registerOnClickListener onClick:  ${arguments[1]}");
               final tag = arguments[1];
               callBackFunction(tag);
             }
@@ -96,34 +150,42 @@ class FloatyHead {
     return true;
   }
 
+  ///Set a custom [icon] for the chathead.
   Future<String> setIcon(String assetPath) async {
     final int result = await _platform.invokeMethod('setIcon', assetPath);
     return result > 0 ? "Icon set" : "There was an error.";
   }
 
+  ///Set a custom [Title] to be displayed in the notification bar for the chathead.
   Future<String> setNotificationTitle(String title) async {
     final int result =
         await _platform.invokeMethod('setNotificationTitle', title);
     return result > 0 ? "Notification Title set" : "There was an error.";
   }
 
+  /// Set a custom [IconTitle] to be displayed in the notification bar for the chathead.
+  /// Please note that in some cases, this is gonna ignore any asset given, and instead
+  /// use the default icon launcher.
   Future<String> setNotificationIcon(String assetPath) async {
     final int result =
         await _platform.invokeMethod('setNotificationIcon', assetPath);
     return result > 0 ? "NotificationIcon set" : "There was an error.";
   }
 
+  /// Set a custom [Close Icon] to be displayed when the chathead is dragged.
   Future<String> setCloseIcon(String assetPath) async {
     final int result = await _platform.invokeMethod('setCloseIcon', assetPath);
     return result > 0 ? "Close Icon set" : "There was an error.";
   }
 
+  /// Set a custom [Close Background] to be displayed behind the [Close Icon].
   Future<String> setCloseBackgroundIcon(String assetPath) async {
     final int result =
         await _platform.invokeMethod('setBackgroundCloseIcon', assetPath);
     return result > 0 ? "Close Icon Background set" : "There was an error.";
   }
 
+  /// Close the [chathead].
   void closeHead() {
     if (_isOpen) {
       _platform.invokeMethod('close');
@@ -133,6 +195,8 @@ class FloatyHead {
       throw Exception('Floaty Head not running');
   }
 
+  /// This functions updates all the UI that is builded in the custom layout
+  /// that the chathead uses.
   Future<bool> updateFloatyHeadContent({
     @required FloatyHeadHeader header,
     FloatyHeadBody body,
@@ -155,9 +219,10 @@ class FloatyHead {
   }
 }
 
+/// Notify to the sender/caller that a widget has been pressed.
 void callbackDispatcher() {
   const MethodChannel _backgroundChannel =
-      const MethodChannel('ni.devotion/floaty_head');
+      const MethodChannel('ni.devotion.floaty_head/background');
   WidgetsFlutterBinding.ensureInitialized();
   _backgroundChannel.setMethodCallHandler((MethodCall call) async {
     final args = call.arguments;

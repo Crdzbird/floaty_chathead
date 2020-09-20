@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory.*
 import android.view.*
 import com.facebook.rebound.*
 import ni.devotion.floaty_head.R
-import ni.devotion.floaty_head.services.FloatingService
+import ni.devotion.floaty_head.services.FloatyIconService
 import ni.devotion.floaty_head.utils.ImageHelper
 import ni.devotion.floaty_head.utils.Managment
 import kotlin.math.hypot
@@ -69,7 +69,7 @@ class ChatHead(var chatHeads: ChatHeads): View(chatHeads.context), View.OnTouchL
     }
 
     override fun onDraw(canvas: Canvas?) {
-        Managment.floatingIcon ?: canvas?.drawBitmap(ImageHelper.addShadow((ImageHelper.getCircularBitmap(decodeResource(FloatingService.instance.resources, R.drawable.bot)))), 0f, 0f, paint)
+        Managment.floatingIcon ?: canvas?.drawBitmap(ImageHelper.addShadow((ImageHelper.getCircularBitmap(decodeResource(Managment.globalContext!!.resources, R.drawable.bot)))), 0f, 0f, paint)
         Managment.floatingIcon?.let {
             canvas?.drawBitmap(ImageHelper.addShadow(ImageHelper.getCircularBitmap(it)), 0f, 0f, paint)
         }

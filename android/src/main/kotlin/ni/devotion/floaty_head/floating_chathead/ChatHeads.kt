@@ -15,8 +15,9 @@ import kotlin.math.*
 import android.app.ActivityManager
 import ni.devotion.floaty_head.FloatFragment
 import ni.devotion.floaty_head.R
-import ni.devotion.floaty_head.services.FloatingService
-import ni.devotion.floaty_head.utils.Constants
+import ni.devotion.floaty_head.services.FloatyContentJobService
+import ni.devotion.floaty_head.services.FloatyIconService
+import ni.devotion.floaty_head.utils.Managment
 
 
 class ChatHeads(context: Context) : View.OnTouchListener, FrameLayout(context) {
@@ -80,8 +81,8 @@ class ChatHeads(context: Context) : View.OnTouchListener, FrameLayout(context) {
         params.gravity = Gravity.START or Gravity.TOP
         params.dimAmount = 0.7f
         motionTrackerParams.gravity = Gravity.START or Gravity.TOP
-        FloatingService.instance.windowManager.addView(motionTracker, motionTrackerParams)
-        FloatingService.instance.windowManager.addView(this, params)
+        FloatyContentJobService.instance?.windowManager?.addView(motionTracker, motionTrackerParams)
+        FloatyContentJobService.instance?.windowManager?.addView(this, params)
         this.addView(content)
         motionTracker.setOnTouchListener(this)
         this.setOnTouchListener{ v, event ->
@@ -198,7 +199,7 @@ class ChatHeads(context: Context) : View.OnTouchListener, FrameLayout(context) {
         motionTrackerParams.y = chatHead.springY.currentValue.toInt()
         motionTrackerParams.flags = motionTrackerParams.flags and WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE.inv()
 
-        FloatingService.instance.windowManager.updateViewLayout(motionTracker, motionTrackerParams)
+        FloatyContentJobService.instance?.windowManager?.updateViewLayout(motionTracker, motionTrackerParams)
 
         return chatHead
     }
@@ -214,10 +215,10 @@ class ChatHeads(context: Context) : View.OnTouchListener, FrameLayout(context) {
         }
         content.hideContent()
         motionTrackerParams.flags = motionTrackerParams.flags and WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE.inv()
-        FloatingService.instance.windowManager.updateViewLayout(motionTracker, motionTrackerParams)
+        FloatyContentJobService.instance?.windowManager?.updateViewLayout(motionTracker, motionTrackerParams)
 
         params.flags = ((params.flags or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE) and WindowManager.LayoutParams.FLAG_DIM_BEHIND.inv()) and WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL.inv() or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-        FloatingService.instance.windowManager.updateViewLayout(this, params)
+        FloatyContentJobService.instance?.windowManager?.updateViewLayout(this, params)
     }
 
     fun changeContent() {
@@ -248,7 +249,7 @@ class ChatHeads(context: Context) : View.OnTouchListener, FrameLayout(context) {
                     it.springY.currentValue = 0.0
                     it.springX.currentValue = 0.0
                 }
-                FloatingService.instance.onDestroy()
+                FloatyContentJobService.instance!!.closeWindow(true)
             }, 300)
         }else{
             close.hide()
@@ -335,7 +336,7 @@ class ChatHeads(context: Context) : View.OnTouchListener, FrameLayout(context) {
 
             if (abs(totalVelocity) % 10 == 0 && !moving) {
                 motionTrackerParams.y = topChatHead!!.springY.currentValue.toInt()
-                FloatingService.instance.windowManager.updateViewLayout(motionTracker, motionTrackerParams)
+                FloatyContentJobService.instance?.windowManager?.updateViewLayout(motionTracker, motionTrackerParams)
             }
         }
     }
@@ -388,9 +389,9 @@ class ChatHeads(context: Context) : View.OnTouchListener, FrameLayout(context) {
                             it.springX.endValue = metrics.widthPixels - topChatHead!!.width.toDouble() - (chatHeads.size - 1 - index) * (it.width + CHAT_HEAD_EXPANDED_PADDING).toDouble()
                         }
                         motionTrackerParams.flags = motionTrackerParams.flags or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-                        FloatingService.instance.windowManager.updateViewLayout(motionTracker, motionTrackerParams)
+                        FloatyContentJobService.instance?.windowManager?.updateViewLayout(motionTracker, motionTrackerParams)
                         params.flags = (params.flags and WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE.inv()) or WindowManager.LayoutParams.FLAG_DIM_BEHIND or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL and WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE.inv()
-                        FloatingService.instance.windowManager.updateViewLayout(this, params)
+                        FloatyContentJobService.instance?.windowManager?.updateViewLayout(this, params)
                         topChatHead!!.isActive = true
                         changeContent()
                         android.os.Handler().postDelayed(

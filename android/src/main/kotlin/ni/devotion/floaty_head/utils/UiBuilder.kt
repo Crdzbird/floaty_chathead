@@ -92,7 +92,7 @@ object UiBuilder {
             button.background = gd
         }
         button.setOnClickListener {
-            if(!FloatyHeadPlugin.instance.sIsIsolateRunning.get()){
+            if(!Managment.sIsIsolateRunning.get()){
                 FloatyHeadPlugin.instance.startCallBackHandler(context)
             }
             FloatyHeadPlugin.instance.invokeCallBack(context, CALLBACK_TYPE_ONCLICK, tag!!)

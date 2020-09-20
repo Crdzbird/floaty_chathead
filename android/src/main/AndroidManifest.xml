@@ -17,10 +17,15 @@
             android:theme="@style/AppTheme.NoActionBar"
             tools:targetApi="n" />
         <service
-            android:name=".services.FloatingService"
+            android:name=".services.FloatyIconService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.FOREGROUND_SERVICE"/>
+        <service
+            android:name=".services.FloatyContentJobService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
     </application>
 
 </manifest>

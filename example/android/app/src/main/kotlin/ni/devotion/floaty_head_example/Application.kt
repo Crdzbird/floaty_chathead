@@ -10,6 +10,13 @@ import io.flutter.plugin.common.PluginRegistry
 import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback
 import io.flutter.embedding.engine.FlutterEngine
 
+/**
+ * For the [Application] class also use the
+ * ```kotlin
+ * Managment.pluginRegistrantC = this
+ * ```
+ * to set the callback between Kotlin/Dart.
+ */
 class Application : FlutterApplication(), PluginRegistry.PluginRegistrantCallback {
       override fun onCreate() {
           super.onCreate()

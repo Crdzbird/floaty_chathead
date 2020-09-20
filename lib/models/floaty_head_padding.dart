@@ -1,3 +1,5 @@
+/// This class is used to build the [Padding] inside the [Body] that is gonna be displayed
+/// when the chathead is tapped.
 class FloatyHeadPadding {
   int left;
   int right;

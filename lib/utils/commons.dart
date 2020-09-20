@@ -1,6 +1,7 @@
 import 'package:floaty_head/floaty_head.dart';
 
 class Commons {
+  /// Replace the [windowGravity] setted in dart-client code.
   static String getWindowGravity(FloatyHeadGravity gravity) {
     if (gravity == null) gravity = FloatyHeadGravity.top;
     switch (gravity) {
@@ -14,6 +15,7 @@ class Commons {
     }
   }
 
+  /// Replace the [contentGravity] setted in dart-client code.
   static String getContentGravity(ContentGravity gravity) {
     if (gravity == null) gravity = ContentGravity.left;
     switch (gravity) {
@@ -27,6 +29,7 @@ class Commons {
     }
   }
 
+  /// Replace the [position] setted in dart-client code.
   static String getPosition(ButtonPosition buttonPosition) {
     if (buttonPosition == null) buttonPosition = ButtonPosition.center;
     switch (buttonPosition) {
@@ -40,6 +43,7 @@ class Commons {
     }
   }
 
+  /// Replace the [fontWeight] setted in dart-client code.
   static String getFontWeight(FontWeight fontWeight) {
     if (fontWeight == null) fontWeight = FontWeight.normal;
     switch (fontWeight) {

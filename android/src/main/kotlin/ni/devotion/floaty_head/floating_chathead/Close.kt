@@ -8,8 +8,7 @@ import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import com.facebook.rebound.*
 import ni.devotion.floaty_head.R
-import ni.devotion.floaty_head.services.FloatingService
-import ni.devotion.floaty_head.utils.ImageHelper
+import ni.devotion.floaty_head.services.FloatyIconService
 import ni.devotion.floaty_head.utils.Managment
 
 class Close(var chatHeads: ChatHeads): View(chatHeads.context) {
@@ -52,11 +51,11 @@ class Close(var chatHeads: ChatHeads): View(chatHeads.context) {
     }
 
     init {
-        bitmapBg = Managment.backgroundCloseIcon ?: Bitmap.createScaledBitmap(BitmapFactory.decodeResource(FloatingService.instance.resources, R.drawable.close_bg), ChatHeads.CLOSE_SIZE, ChatHeads.CLOSE_SIZE, false)
+        bitmapBg = Managment.backgroundCloseIcon ?: Bitmap.createScaledBitmap(BitmapFactory.decodeResource(Managment.globalContext!!.resources, R.drawable.close_bg), ChatHeads.CLOSE_SIZE, ChatHeads.CLOSE_SIZE, false)
         Managment.backgroundCloseIcon?.let {
             bitmapBg = Bitmap.createScaledBitmap(it, ChatHeads.CLOSE_SIZE, ChatHeads.CLOSE_SIZE, false)
         }
-        bitmapClose = Managment.closeIcon ?: Bitmap.createScaledBitmap(BitmapFactory.decodeResource(FloatingService.instance.resources, R.drawable.close), WindowManagerHelper.dpToPx(28f), WindowManagerHelper.dpToPx(28f), false)
+        bitmapClose = Managment.closeIcon ?: Bitmap.createScaledBitmap(BitmapFactory.decodeResource(Managment.globalContext!!.resources, R.drawable.close), WindowManagerHelper.dpToPx(28f), WindowManagerHelper.dpToPx(28f), false)
         Managment.closeIcon?.let {
             bitmapClose = Bitmap.createScaledBitmap(it, WindowManagerHelper.dpToPx(28f), WindowManagerHelper.dpToPx(28f), false)
         }
@@ -80,7 +79,7 @@ class Close(var chatHeads: ChatHeads): View(chatHeads.context) {
         })
         springScale.addListener(object : SimpleSpringListener() {
             override fun onSpringUpdate(spring: Spring) {
-                bitmapBg = Managment.backgroundCloseIcon ?: Bitmap.createScaledBitmap(BitmapFactory.decodeResource(FloatingService.instance.resources, R.drawable.close_bg), (spring.currentValue + ChatHeads.CLOSE_SIZE).toInt(), (spring.currentValue + ChatHeads.CLOSE_SIZE).toInt(), false)
+                bitmapBg = Managment.backgroundCloseIcon ?: Bitmap.createScaledBitmap(BitmapFactory.decodeResource(Managment.globalContext!!.resources, R.drawable.close_bg), (spring.currentValue + ChatHeads.CLOSE_SIZE).toInt(), (spring.currentValue + ChatHeads.CLOSE_SIZE).toInt(), false)
                 Managment.backgroundCloseIcon?.let {
                     bitmapBg = Bitmap.createScaledBitmap(it, (spring.currentValue + ChatHeads.CLOSE_SIZE).toInt(), (spring.currentValue + ChatHeads.CLOSE_SIZE).toInt(), false)
                 }

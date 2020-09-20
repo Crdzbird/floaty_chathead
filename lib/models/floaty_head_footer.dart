@@ -1,5 +1,7 @@
 import 'package:floaty_head/floaty_head.dart';
 
+/// This class is used to build the [Footer Content] inside the [Body] that is gonna be displayed
+/// when the chathead is tapped.
 class FloatyHeadFooter {
   FloatyHeadText text;
   FloatyHeadPadding padding;

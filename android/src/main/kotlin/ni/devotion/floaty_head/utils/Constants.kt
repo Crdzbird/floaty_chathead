@@ -6,7 +6,7 @@ object Constants {
     val METHOD_CHANNEL = "ni.devotion/floaty_head"
     val BACKGROUND_CHANNEL = "ni.devotion.floaty_head/background"
 
-    val SHARED_PREF_SYSTEM_ALERT_WINDOW = "ni.devotion.floaty_head"
+    val SHARED_PREF_FLOATY_HEAD = "ni.devotion.floaty_head"
     val CALLBACK_HANDLE_KEY = "callback_handler"
     val CODE_CALLBACK_HANDLE_KEY = "code_callback_handler"
 

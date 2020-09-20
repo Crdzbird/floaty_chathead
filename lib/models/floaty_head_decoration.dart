@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// This class is used to build the [Decoration] inside the [Body] that is gonna be displayed
+/// when the chathead is tapped.
 class FloatyHeadDecoration {
   Color startColor;
   Color endColor;

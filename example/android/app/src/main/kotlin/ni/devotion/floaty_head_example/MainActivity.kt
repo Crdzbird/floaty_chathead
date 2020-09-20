@@ -7,6 +7,11 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugins.GeneratedPluginRegistrant
 
 class MainActivity: FlutterActivity() {
+
+    /**
+     * When using this plugin please set the [Application().onCreate()]
+     * if this isn't setted the chathead cannot communicate with the dart-client code
+     */
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine);
         Application().onCreate()

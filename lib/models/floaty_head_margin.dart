@@ -1,3 +1,5 @@
+/// This class is used to build the [Margin] inside the [Body] that is gonna be displayed
+/// when the chathead is tapped.
 class FloatyHeadMargin {
   int left;
   int right;
