@@ -3,7 +3,42 @@ One thing that i always love was the simplicity that messenger had using Chathea
 
 And for that reason this plugin was created with all the love that us the developers have :heartbeat:
 
-[![](https://raw.githubusercontent.com/Crdzbird/floaty_chathead/master/screenshots/floaty_chathead.gif)](https://raw.githubusercontent.com/Crdzbird/floaty_chathead/master/screenshots/floaty_chathead.gif "Floaty Head in action ")
+
+### To use this please add in your **pubspec.yaml**
+
+```yaml
+dependencies:
+  floaty_head: ^1.1.0
+```
+
+also if you need to add interaction between your code and any button, please add this to your Kotlin/Java class.
+
+```kotlin
+override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
+        GeneratedPluginRegistrant.registerWith(flutterEngine);
+        Application().onCreate()
+    }
+```
+
+**Application.kt**
+
+```kotlin
+class Application : FlutterApplication(), PluginRegistry.PluginRegistrantCallback {
+      override fun onCreate() {
+          super.onCreate()
+          FloatyHeadPlugin().setPluginRegistrant(this)
+          Managment.pluginRegistrantC = this
+      }
+
+     override fun registerWith(registry: PluginRegistry) {
+        FloatyHeadPlugin().registerWith(registry.registrarFor(this.packageName))
+     }
+  }
+```
+
+for any doubt please check the **example** folder.
+
+[![](https://raw.githubusercontent.com/Crdzbird/floaty_chathead/master/screenshots/floaty_chathead.gif)](https://raw.githubusercontent.com/Crdzbird/floaty_chathead/master/screenshots/floaty_chathead.gif "Floaty Head in action")
 
 ## Examples
 
@@ -119,23 +154,20 @@ final footer = FloatyHeadFooter(
   );
 ```
 
-## PLUGIN STILL IN DEVELOPMENT (100% COMPLETED)
 
-Currently you can use this plugin in your projects. however there's still some issues that aren't solved.
 
 DONE:
-- [x] PERMISSIONS ON FIRST RUN
+- [x] PERMISSIONS ON FIRST RUN.
 - [x] issue with button clicked to retrieve the tag of the button pressed from android into flutter.
-- [x] Custom Views for Header, Body, Footer
-- [x] Customization of Notification Text
-- [x] Customization of Notification Icon
-- [x] Customization of Bubble Icon
-- [x] Customization of Close Icon
-- [x] Customization of Close Background Icon
+- [x] Custom Views for Header, Body, Footer.
+- [x] Customization of Notification Text.
+- [x] Customization of Notification Icon.
+- [x] Customization of Bubble Icon.
+- [x] Customization of Close Icon.
+- [x] Customization of Close Background Icon.
+- [x] FloatyHead runs even when the app is killed.
+- [x] Added documentation to all the classes used in **DART** and **KOTLIN**.
 
-
-TODO:
-- [ ] Add customization to the gradient shadow displayed when the chathead is moved, currently is setted by default on a xml inside Android.
 
 
 ### Contributing
