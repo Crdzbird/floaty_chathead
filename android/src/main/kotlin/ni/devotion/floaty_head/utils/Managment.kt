@@ -12,6 +12,9 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
 import ni.devotion.floaty_head.services.FloatyIconService
 import java.util.concurrent.atomic.AtomicBoolean
 
+/**
+ * Handle all the states of the project, and all the custom icons including the body that is gonna be displayed inside the chathead.
+ */
 object Managment {
     var floatingIcon: Bitmap? = null
     var closeIcon: Bitmap? = null

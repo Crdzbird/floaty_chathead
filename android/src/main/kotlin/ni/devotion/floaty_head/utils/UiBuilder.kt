@@ -35,6 +35,11 @@ import ni.devotion.floaty_head.utils.Constants.KEY_TOP
 import ni.devotion.floaty_head.utils.Constants.KEY_WIDTH
 
 
+/**
+ * This class is responsible to create all the content that is displayed inside the chathead.
+ * if you wanna add your own widget, please be sure to create your [function], also remember to
+ * create your class with the styles and components needed for that widget to be displayed.
+ */
 object UiBuilder {
     fun getTextView(context: Context?, textMap: Map<String, Any>?): TextView? {
         if (textMap == null) return null

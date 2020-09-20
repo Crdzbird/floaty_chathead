@@ -2,6 +2,9 @@ package ni.devotion.floaty_head.utils
 
 import android.util.Log
 
+/**
+ * Class used for convert any number to [float] or [int] and retrieve any number from an [any] object.
+ */
 object NumberUtils {
     private const val TAG = "NumberUtils"
     fun getFloat(`object`: Any?) = getNumber(`object`).toFloat()
