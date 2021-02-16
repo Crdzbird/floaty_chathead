@@ -1,6 +1,7 @@
 package ni.devotion.floaty_head
 
 import android.app.Activity
+import android.telephony.SmsManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -57,6 +58,7 @@ import java.util.ArrayList
 import java.util.HashMap
 import kotlin.collections.List
 import kotlin.collections.Map
+import android.widget.Toast
 
 class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallHandler {
     companion object {
@@ -68,6 +70,7 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
         private var channel: MethodChannel? = null
         private var backgroundChannel: MethodChannel? = null
     }
+
     var sPluginRegistrantCallback: PluginRegistry.PluginRegistrantCallback? = null
     private val CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084
 
@@ -143,15 +146,43 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
         }
     }
 
+    private fun sendSMSMessage(  phoneNo: String,   message: String) {
+        try {
+            val smsManager: SmsManager = SmsManager.getDefault()
+            smsManager.sendTextMessage(phoneNo, null, message, null, null)
+            Toast.makeText(context, "SMS sent.",
+                    Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Toast.makeText(context,
+                    "SMS faild, please try again.",
+                    Toast.LENGTH_LONG).show()
+            e.printStackTrace()
+        }
+    }
+
     private fun invokeCallBackToFlutter(channel: MethodChannel, method: String, arguments: List<Any>, retries: IntArray) {
         channel.invokeMethod(method, arguments, object : MethodChannel.Result {
             override fun success(o: Any?) {
-                Log.i("TAG", "Invoke call back successs")
+                Log.i("TAG", "Invoke call back successs from Floaty Head Plugin")
                 Log.i("TAG", "channel  :${channel}, method  :  $method , arguments: ${arguments.toString()}, retries : ${retries.toString()} ")
-                val url = "http://www.google.com"
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(url)
-                activity?.startActivity(intent)
+                var tag: String = arguments[2].toString().split(":")[0]
+                if (tag == "alarm_btn") {
+                    var numbersInString: String = arguments[2].toString().split(":")[1];
+                    var numbers: List<String> = numbersInString.subSequence(1, numbersInString.length - 1).split(",")
+                    Log.i("TAG", "Sending Alarm to following contacts : " + numbers.toString())
+
+                } else if (tag == "message_only") {
+                    var numbersInString: String = arguments[2].toString().split(":")[1];
+                    var numbers: List<String> = numbersInString.subSequence(1, numbersInString.length - 1).split(",")
+                    Log.i("TAG", "Sending Messages to following contacts : " + numbers.toString())
+                    for (  elem in numbers)
+                        sendSMSMessage(elem, "HI")
+                } else if (tag == "open_app") {
+                    val url = "http://www.epicare.com/home"
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(url)
+                    activity?.startActivity(intent)
+                }
             }
 
             override fun error(s: String?, s1: String?, o: Any?) {
