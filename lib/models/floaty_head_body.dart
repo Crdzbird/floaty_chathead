@@ -3,9 +3,9 @@ import 'package:floaty_head/floaty_head.dart';
 /// This class is used to build the [Body] that is gonna be displayed
 /// when the chathead is tapped.
 class FloatyHeadBody {
-  List<EachRow> rows;
-  FloatyHeadPadding padding;
-  FloatyHeadDecoration decoration;
+  List<EachRow>? rows;
+  FloatyHeadPadding? padding;
+  FloatyHeadDecoration? decoration;
 
   ///[FloatyHeadBody] currently accepts multiple rows, padding and decoration.
   ///in case of a new components.
@@ -23,7 +23,7 @@ class FloatyHeadBody {
     final Map<String, dynamic> map = <String, dynamic>{
       'rows': (rows == null)
           ? null
-          : List<dynamic>.from(rows.map((x) => x?.getMap())),
+          : List<dynamic>.from(rows!.map((x) => x.getMap())),
       'padding': padding?.getMap(),
       'decoration': decoration?.getMap()
     };
@@ -34,11 +34,11 @@ class FloatyHeadBody {
 /// This class is used to build the [Row Content] inside the [Body] that is gonna be displayed
 /// when the chathead is tapped.
 class EachRow {
-  List<EachColumn> columns;
-  FloatyHeadPadding padding;
-  FloatyHeadMargin margin;
-  ContentGravity gravity;
-  FloatyHeadDecoration decoration;
+  List<EachColumn>? columns;
+  FloatyHeadPadding? padding;
+  FloatyHeadMargin? margin;
+  ContentGravity? gravity;
+  FloatyHeadDecoration? decoration;
 
   EachRow({
     this.columns,
@@ -52,7 +52,7 @@ class EachRow {
     final Map<String, dynamic> map = <String, dynamic>{
       'columns': (columns == null)
           ? null
-          : List<dynamic>.from(columns.map((x) => x?.getMap())),
+          : List<dynamic>.from(columns!.map((x) => x.getMap())),
       'padding': padding?.getMap(),
       'margin': margin?.getMap(),
       'gravity': Commons.getContentGravity(gravity),
@@ -65,10 +65,10 @@ class EachRow {
 /// This class is used to build the [Column Content] inside the [Body] that is gonna be displayed
 /// when the chathead is tapped.
 class EachColumn {
-  FloatyHeadText text;
-  FloatyHeadPadding padding;
-  FloatyHeadMargin margin;
-  FloatyHeadDecoration decoration;
+  FloatyHeadText? text;
+  FloatyHeadPadding? padding;
+  FloatyHeadMargin? margin;
+  FloatyHeadDecoration? decoration;
 
   EachColumn({
     this.text,

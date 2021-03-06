@@ -3,8 +3,15 @@ One thing that i always love was the simplicity that messenger had using Chathea
 
 And for that reason this plugin was created with all the love that us the developers have :heartbeat:
 
+### null-safety version
 
-### To use this please add in your **pubspec.yaml**
+```yaml
+dependencies:
+  floaty_head: ^1.1.0
+```
+
+
+### If you don't wanna use the null-safety, please use the version: 1.1.0
 
 ```yaml
 dependencies:

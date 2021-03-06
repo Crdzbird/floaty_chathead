@@ -91,8 +91,8 @@ typedef void OnClickListener(String tag);
 
 class FloatyHead {
   bool _isOpen = false;
-  Timer _callback;
-  Timer _timer;
+  Timer? _callback;
+  late Timer _timer;
 
   /// Return the [state] of the chathead
   /// ```dart
@@ -101,7 +101,7 @@ class FloatyHead {
   bool get isOpen => _isOpen;
 
   /// The timer is used when an action is needed to perform after x time has passed.
-  Timer get callback => _callback;
+  Timer? get callback => _callback;
   static const _platform = const MethodChannel('ni.devotion/floaty_head');
 
   FloatyHead() {
@@ -116,9 +116,9 @@ class FloatyHead {
   void openBubble() async {
     _platform.invokeMethod('start');
     _timer = Timer.periodic(Duration(seconds: 1), (timer) async {
-      _isOpen = await _platform?.invokeMethod('isOpen') ?? false;
+      _isOpen = await _platform.invokeMethod('isOpen') ?? false;
       if (!_isOpen) {
-        timer?.cancel();
+        timer.cancel();
       }
     });
   }
@@ -129,8 +129,8 @@ class FloatyHead {
   static Future<bool> registerOnClickListener(
       OnClickListener callBackFunction) async {
     final callBackDispatcher =
-        PluginUtilities.getCallbackHandle(callbackDispatcher);
-    final callBack = PluginUtilities.getCallbackHandle(callBackFunction);
+        PluginUtilities.getCallbackHandle(callbackDispatcher)!;
+    final callBack = PluginUtilities.getCallbackHandle(callBackFunction)!;
     _platform.setMethodCallHandler((MethodCall call) {
       switch (call.method) {
         case "callBack":
@@ -144,7 +144,7 @@ class FloatyHead {
           }
       }
       return null;
-    });
+    } as Future<dynamic> Function(MethodCall)?);
     await _platform.invokeMethod("registerCallBackHandler",
         <dynamic>[callBackDispatcher.toRawHandle(), callBack.toRawHandle()]);
     return true;
@@ -152,14 +152,15 @@ class FloatyHead {
 
   ///Set a custom [icon] for the chathead.
   Future<String> setIcon(String assetPath) async {
-    final int result = await _platform.invokeMethod('setIcon', assetPath);
+    final int result =
+        await (_platform.invokeMethod('setIcon', assetPath) as FutureOr<int>);
     return result > 0 ? "Icon set" : "There was an error.";
   }
 
   ///Set a custom [Title] to be displayed in the notification bar for the chathead.
   Future<String> setNotificationTitle(String title) async {
-    final int result =
-        await _platform.invokeMethod('setNotificationTitle', title);
+    final int result = await (_platform.invokeMethod(
+        'setNotificationTitle', title) as FutureOr<int>);
     return result > 0 ? "Notification Title set" : "There was an error.";
   }
 
@@ -167,21 +168,22 @@ class FloatyHead {
   /// Please note that in some cases, this is gonna ignore any asset given, and instead
   /// use the default icon launcher.
   Future<String> setNotificationIcon(String assetPath) async {
-    final int result =
-        await _platform.invokeMethod('setNotificationIcon', assetPath);
+    final int result = await (_platform.invokeMethod(
+        'setNotificationIcon', assetPath) as FutureOr<int>);
     return result > 0 ? "NotificationIcon set" : "There was an error.";
   }
 
   /// Set a custom [Close Icon] to be displayed when the chathead is dragged.
   Future<String> setCloseIcon(String assetPath) async {
-    final int result = await _platform.invokeMethod('setCloseIcon', assetPath);
+    final int result = await (_platform.invokeMethod('setCloseIcon', assetPath)
+        as FutureOr<int>);
     return result > 0 ? "Close Icon set" : "There was an error.";
   }
 
   /// Set a custom [Close Background] to be displayed behind the [Close Icon].
   Future<String> setCloseBackgroundIcon(String assetPath) async {
-    final int result =
-        await _platform.invokeMethod('setBackgroundCloseIcon', assetPath);
+    final int result = await (_platform.invokeMethod(
+        'setBackgroundCloseIcon', assetPath) as FutureOr<int>);
     return result > 0 ? "Close Icon Background set" : "There was an error.";
   }
 
@@ -197,15 +199,14 @@ class FloatyHead {
 
   /// This functions updates all the UI that is builded in the custom layout
   /// that the chathead uses.
-  Future<bool> updateFloatyHeadContent({
-    @required FloatyHeadHeader header,
-    FloatyHeadBody body,
-    FloatyHeadFooter footer,
-    FloatyHeadMargin margin,
-    int width,
-    int height,
+  Future<bool?> updateFloatyHeadContent({
+    required FloatyHeadHeader header,
+    FloatyHeadBody? body,
+    FloatyHeadFooter? footer,
+    FloatyHeadMargin? margin,
+    int? width,
+    int? height,
   }) async {
-    assert(header != null);
     final Map<String, dynamic> params = <String, dynamic>{
       'header': header.getMap(),
       'body': body?.getMap(),
@@ -227,8 +228,7 @@ void callbackDispatcher() {
   _backgroundChannel.setMethodCallHandler((MethodCall call) async {
     final args = call.arguments;
     final Function callback = PluginUtilities.getCallbackFromHandle(
-        CallbackHandle.fromRawHandle(args[0]));
-    assert(callback != null);
+        CallbackHandle.fromRawHandle(args[0]))!;
     final type = args[1];
     if (type == "onClick") {
       final tag = args[2];

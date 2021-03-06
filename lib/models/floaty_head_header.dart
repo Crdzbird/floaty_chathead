@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 /// when the chathead is tapped.
 class FloatyHeadHeader {
   @required
-  FloatyHeadText title;
-  FloatyHeadText subTitle;
-  FloatyHeadButton button;
-  ButtonPosition buttonsPosition;
-  FloatyHeadPadding padding;
-  FloatyHeadDecoration decoration;
+  FloatyHeadText? title;
+  FloatyHeadText? subTitle;
+  FloatyHeadButton? button;
+  ButtonPosition? buttonsPosition;
+  FloatyHeadPadding? padding;
+  FloatyHeadDecoration? decoration;
 
   FloatyHeadHeader({
     this.title,

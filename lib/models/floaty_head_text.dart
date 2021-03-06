@@ -11,20 +11,19 @@ class FloatyHeadText {
   FloatyHeadPadding padding;
 
   FloatyHeadText(
-      {@required this.text,
-      this.fontSize,
-      this.fontWeight,
-      this.textColor,
-      this.padding})
-      : assert(text != null);
+      {required this.text,
+      /*required*/ required this.fontSize,
+      /*required*/ required this.fontWeight,
+      /*required*/ required this.textColor,
+      /*required*/ required this.padding});
 
   Map<String, dynamic> getMap() {
     final Map<String, dynamic> map = <String, dynamic>{
       'text': text,
-      'fontSize': fontSize ?? 14.0,
+      'fontSize': fontSize,
       'fontWeight': Commons.getFontWeight(fontWeight),
-      'textColor': textColor?.value ?? Colors.black.value,
-      'padding': padding?.getMap(),
+      'textColor': textColor.value,
+      'padding': padding.getMap(),
     };
     return map;
   }

@@ -1,10 +1,11 @@
 name: floaty_head
 description: A flutter plugin to create custom chatheads with hidden content displayed on tap, like Messenger.
-version: 1.1.0
+author: Luis Cardoza Bird <luisalfonsocb83@gmail.com>
+version: 2.0.0-nullsafety.0
 homepage: https://github.com/Crdzbird/floaty_chathead
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
   flutter: ">=1.20.0 <2.0.0"
 
 dependencies:
