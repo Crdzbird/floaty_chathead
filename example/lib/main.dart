@@ -17,17 +17,44 @@ class _Home extends State<Home> {
 
   final header = FloatyHeadHeader(
     title: FloatyHeadText(
-        text: "Outgoing Call", fontSize: 10, textColor: Colors.black45),
+      text: "Outgoing Call",
+      fontSize: 10,
+      textColor: Colors.black45,
+      fontWeight: FontWeight.normal,
+      padding: FloatyHeadPadding(
+        bottom: 4,
+        left: 5,
+        right: 5,
+        top: 5,
+      ),
+    ),
     padding: FloatyHeadPadding.setSymmetricPadding(12, 12),
     subTitle: FloatyHeadText(
-        text: "8989898989",
-        fontSize: 14,
-        fontWeight: FontWeight.bold,
-        textColor: Colors.black87),
+      text: "8989898989",
+      fontSize: 14,
+      fontWeight: FontWeight.bold,
+      padding: FloatyHeadPadding(
+        bottom: 4,
+        left: 5,
+        right: 5,
+        top: 5,
+      ),
+      textColor: Colors.black87,
+    ),
     decoration: FloatyHeadDecoration(startColor: Colors.grey[100]),
     button: FloatyHeadButton(
         text: FloatyHeadText(
-            text: "Personal", fontSize: 10, textColor: Colors.black45),
+          fontWeight: FontWeight.bold,
+          text: "Personal",
+          fontSize: 10,
+          textColor: Colors.black45,
+          padding: FloatyHeadPadding(
+            bottom: 4,
+            left: 5,
+            right: 5,
+            top: 5,
+          ),
+        ),
         tag: "personal_btn"),
   );
 
@@ -37,7 +64,17 @@ class _Home extends State<Home> {
         columns: [
           EachColumn(
             text: FloatyHeadText(
-                text: "Updated body", fontSize: 12, textColor: Colors.black45),
+              fontWeight: FontWeight.bold,
+              text: "Updated body",
+              fontSize: 12,
+              textColor: Colors.black45,
+              padding: FloatyHeadPadding(
+                bottom: 4,
+                left: 5,
+                right: 5,
+                top: 5,
+              ),
+            ),
           ),
         ],
         gravity: ContentGravity.center,
@@ -45,10 +82,17 @@ class _Home extends State<Home> {
       EachRow(columns: [
         EachColumn(
           text: FloatyHeadText(
-              text: "Updated long data of the body",
-              fontSize: 12,
-              textColor: Colors.black87,
-              fontWeight: FontWeight.bold),
+            text: "Updated long data of the body",
+            fontSize: 12,
+            textColor: Colors.black87,
+            fontWeight: FontWeight.bold,
+            padding: FloatyHeadPadding(
+              bottom: 4,
+              left: 5,
+              right: 5,
+              top: 5,
+            ),
+          ),
           padding: FloatyHeadPadding.setSymmetricPadding(6, 8),
           decoration: FloatyHeadDecoration(
               startColor: Colors.black12, borderRadius: 25.0),
@@ -59,7 +103,17 @@ class _Home extends State<Home> {
         columns: [
           EachColumn(
             text: FloatyHeadText(
-                text: "Notes", fontSize: 10, textColor: Colors.black45),
+              text: "Notes",
+              fontSize: 10,
+              textColor: Colors.black45,
+              fontWeight: FontWeight.normal,
+              padding: FloatyHeadPadding(
+                bottom: 4,
+                left: 5,
+                right: 5,
+                top: 5,
+              ),
+            ),
           ),
         ],
         gravity: ContentGravity.left,
@@ -69,10 +123,17 @@ class _Home extends State<Home> {
         columns: [
           EachColumn(
             text: FloatyHeadText(
-                text: "Updated random notes.",
-                fontSize: 13,
-                textColor: Colors.black54,
-                fontWeight: FontWeight.bold),
+              text: "Updated random notes.",
+              fontSize: 13,
+              textColor: Colors.black54,
+              fontWeight: FontWeight.bold,
+              padding: FloatyHeadPadding(
+                bottom: 4,
+                left: 5,
+                right: 5,
+                top: 5,
+              ),
+            ),
           ),
         ],
         gravity: ContentGravity.left,
@@ -85,9 +146,17 @@ class _Home extends State<Home> {
     buttons: [
       FloatyHeadButton(
         text: FloatyHeadText(
-            text: "Simple button",
-            fontSize: 12,
-            textColor: Color.fromRGBO(250, 139, 97, 1)),
+          text: "Simple button",
+          fontSize: 12,
+          textColor: Color.fromRGBO(250, 139, 97, 1),
+          padding: FloatyHeadPadding(
+            bottom: 4,
+            left: 5,
+            right: 5,
+            top: 5,
+          ),
+          fontWeight: FontWeight.normal,
+        ),
         tag: "simple_button",
         padding: FloatyHeadPadding(left: 10, right: 10, bottom: 10, top: 10),
         width: 0,
@@ -100,7 +169,17 @@ class _Home extends State<Home> {
       ),
       FloatyHeadButton(
         text: FloatyHeadText(
-            text: "Focus button", fontSize: 12, textColor: Colors.white),
+          fontWeight: FontWeight.normal,
+          padding: FloatyHeadPadding(
+            bottom: 4,
+            left: 5,
+            right: 5,
+            top: 5,
+          ),
+          text: "Focus button",
+          fontSize: 12,
+          textColor: Colors.white,
+        ),
         tag: "focus_button",
         width: 0,
         padding: FloatyHeadPadding(left: 10, right: 10, bottom: 10, top: 10),
@@ -134,29 +213,29 @@ class _Home extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              RaisedButton(
+              ElevatedButton(
                   child: Text('Open Floaty Chathead'),
                   onPressed: () => floatyHead.openBubble()),
-              RaisedButton(
+              ElevatedButton(
                   child: Text('Close Floaty Chathead'),
                   onPressed: () => closeFloatyHead()),
-              RaisedButton(
+              ElevatedButton(
                   child: Text('Set icon Floaty Chathead'),
                   onPressed: () => setIcon()),
-              RaisedButton(
+              ElevatedButton(
                   child: Text('Set close icon Floaty Chathead'),
                   onPressed: () => setCloseIcon()),
-              RaisedButton(
+              ElevatedButton(
                   child: Text('Set close background Icon Floaty Chathead'),
                   onPressed: () => setCloseIconBackground()),
-              RaisedButton(
+              ElevatedButton(
                   child: Text(
                       'Set notification title to: OH MY GOD! THEY KILL KENNY!!! Floaty Chathead'),
                   onPressed: () => setNotificationTitle()),
-              RaisedButton(
+              ElevatedButton(
                   child: Text('Set notification Icon Floaty Chathead'),
                   onPressed: () => setNotificationIcon()),
-              RaisedButton(
+              ElevatedButton(
                   child: Text('Set Custom Header into Floaty Chathead'),
                   onPressed: () => setCustomHeader()),
             ],
@@ -186,6 +265,7 @@ class _Home extends State<Home> {
     } on PlatformException {
       result = 'Failed to get icon.';
     }
+    print('result: $result');
     if (!mounted) return;
   }
 
@@ -207,6 +287,7 @@ class _Home extends State<Home> {
     String assetPath = "assets/chatheadIcon.png";
     try {
       result = await floatyHead.setIcon(assetPath);
+      print('result: $result');
     } on PlatformException {
       result = 'Failed to get icon.';
     }
