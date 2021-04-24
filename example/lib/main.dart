@@ -41,11 +41,15 @@ class _Home extends State<Home> {
       ),
       textColor: Colors.black87,
     ),
-    decoration: FloatyHeadDecoration(startColor: Colors.grey[100]),
+    decoration: FloatyHeadDecoration(
+      startColor: Colors.white,
+      endColor: Colors.amber,
+      borderColor: Colors.red,
+    ),
     button: FloatyHeadButton(
         text: FloatyHeadText(
           fontWeight: FontWeight.bold,
-          text: "Personal",
+          text: "Peronal",
           fontSize: 10,
           textColor: Colors.black45,
           padding: FloatyHeadPadding(
@@ -189,7 +193,30 @@ class _Home extends State<Home> {
             endColor: Color.fromRGBO(247, 28, 88, 1),
             borderWidth: 0,
             borderRadius: 30.0),
-      )
+      ),
+      FloatyHeadButton(
+        text: FloatyHeadText(
+          fontWeight: FontWeight.normal,
+          padding: FloatyHeadPadding(
+            bottom: 4,
+            left: 5,
+            right: 5,
+            top: 5,
+          ),
+          text: "Focus button",
+          fontSize: 12,
+          textColor: Colors.white,
+        ),
+        tag: "focus_button",
+        width: 0,
+        padding: FloatyHeadPadding(left: 10, right: 10, bottom: 10, top: 10),
+        height: FloatyHeadButton.WRAP_CONTENT,
+        decoration: FloatyHeadDecoration(
+            startColor: Color.fromRGBO(250, 139, 97, 1),
+            endColor: Color.fromRGBO(247, 28, 88, 1),
+            borderWidth: 0,
+            borderRadius: 30.0),
+      ),
     ],
     padding: FloatyHeadPadding(left: 16, right: 16, bottom: 12),
     decoration: FloatyHeadDecoration(startColor: Colors.white),
