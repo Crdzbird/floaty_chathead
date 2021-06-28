@@ -36,6 +36,7 @@ class FloatyContentJobService : Service() {
         instance = this
         createNotificationChannel()
         showNotificationManager()
+        createWindow()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
