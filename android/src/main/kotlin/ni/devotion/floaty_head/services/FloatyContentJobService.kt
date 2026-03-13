@@ -1,150 +1,173 @@
 package ni.devotion.floaty_head.services
 
-import android.app.*
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
 import android.view.WindowManager
 import androidx.core.app.NotificationCompat
-import android.graphics.PixelFormat
-import android.view.WindowManager.LayoutParams
+import io.flutter.embedding.engine.FlutterEngineCache
 import ni.devotion.floaty_head.FloatyHeadPlugin
 import ni.devotion.floaty_head.R
 import ni.devotion.floaty_head.floating_chathead.ChatHeads
-import ni.devotion.floaty_head.utils.Constants.INTENT_EXTRA_PARAMS_MAP
+import ni.devotion.floaty_head.generated.FloatyOverlayFlutterApi
+import ni.devotion.floaty_head.generated.FloatyOverlayHostApi
+import ni.devotion.floaty_head.generated.OverlayFlagMessage
+import ni.devotion.floaty_head.generated.OverlayPositionMessage
+import ni.devotion.floaty_head.utils.Constants
 import ni.devotion.floaty_head.utils.Managment
-import java.lang.Exception
-import java.util.*
 
+class FloatyContentJobService : Service(), FloatyOverlayHostApi {
 
-class FloatyContentJobService : Service() {
     companion object {
-        var instance: FloatyContentJobService?= null
-        val CHANNEL_ID = "ForegroundServiceChannel"
-        val NOTIFICATION_ID = 1
-        val INTENT_EXTRA_IS_UPDATE_WINDOW = "IsUpdateWindow"
-        val INTENT_EXTRA_IS_CLOSE_WINDOW = "IsCloseWindow"
+        var instance: FloatyContentJobService? = null
     }
+
     var windowManager: WindowManager? = null
-    var context: Context? = null
-    var notification: Notification? = null
     var chatHeads: ChatHeads? = null
+    private var overlayFlutterApi: FloatyOverlayFlutterApi? = null
 
     override fun onCreate() {
         instance = this
         createNotificationChannel()
-        showNotificationManager()
+        showNotification()
+
+        val engine = FlutterEngineCache.getInstance().get(Constants.OVERLAY_ENGINE_CACHE_TAG)
+        if (engine != null) {
+            FloatyOverlayHostApi.setUp(engine.dartExecutor, this)
+            overlayFlutterApi = FloatyOverlayFlutterApi(engine.dartExecutor)
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if(null != intent && intent.extras != null) {
-            val paramsMap = (intent.getSerializableExtra(INTENT_EXTRA_PARAMS_MAP) as HashMap<String, Any>?)
-            assert(paramsMap != null)
-            context = this
-            val isCloseWindow = intent.getBooleanExtra(INTENT_EXTRA_IS_CLOSE_WINDOW, false)
-
-            //createWindow()
-            if(!isCloseWindow){
-                val isUpdateWindow = intent.getBooleanExtra(INTENT_EXTRA_IS_CLOSE_WINDOW, false)
-                if(isUpdateWindow){
-                    //updateWindow()
-                }else{
-                    createWindow()
-                }
-            }else{
-                closeWindow(true)
-            }
+        if (chatHeads == null) {
+            createWindow()
         }
         return START_STICKY
     }
 
-    fun closeWindow(isEverythingDone: Boolean){
-        try {
-            windowManager?.let { wm ->
-                chatHeads?.let { ch ->
-                    ch.removeAllViews()
-                    wm.removeView(ch)
-                    chatHeads = null
-                }
-            }
-            windowManager = null
-            if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q){
-                Managment.activity?.stopService(Intent(Managment.activity?.applicationContext, this@FloatyContentJobService::class.java))
-            }else{
-                Managment.activity?.startForegroundService(Intent(Managment.activity?.applicationContext, this@FloatyContentJobService::class.java))
-            }
-        }catch(ex: Exception){
-            Log.e("TAG", "View not found")
-        }
-        if(isEverythingDone) stopSelf()
-    }
-
-    fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val serviceChannel = NotificationChannel(
-                    CHANNEL_ID,
-                    "Foreground Service Channel",
-                    NotificationManager.IMPORTANCE_DEFAULT
-            )
-            val manager = getSystemService(NotificationManager::class.java)
-            assert(manager != null)
-            manager.createNotificationChannel(serviceChannel)
-        }
-    }
-
     fun createWindow() {
-        setWindowManager()
-        val params:WindowManager.LayoutParams
-        params = LayoutParams()
-        params.width = LayoutParams.MATCH_PARENT
-        params.height = LayoutParams.WRAP_CONTENT
-        params.format = PixelFormat.TRANSLUCENT
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
-        params.type = LayoutParams.TYPE_APPLICATION_OVERLAY
-        params.flags = LayoutParams.FLAG_NOT_TOUCH_MODAL or LayoutParams.FLAG_SHOW_WHEN_LOCKED or LayoutParams.FLAG_NOT_FOCUSABLE
-        }
-        else
-        {
-        params.type = LayoutParams.TYPE_SYSTEM_ALERT or LayoutParams.TYPE_SYSTEM_OVERLAY
-        params.flags = LayoutParams.FLAG_NOT_TOUCH_MODAL or LayoutParams.FLAG_NOT_FOCUSABLE
-        }
+        windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         chatHeads = ChatHeads(this)
         chatHeads?.add()
-    }
 
-    fun showNotificationManager() {
-        val notificationIntent = Intent(this, FloatyHeadPlugin::class.java)
-        val pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0)
-        notification = if(Managment.notificationIcon == null) {
-            NotificationCompat.Builder(this, "ForegroundServiceChannel")
-                    .setContentTitle("${Managment.notificationTitle} is Currently Running")
-                    .setSmallIcon(R.drawable.ic_chathead)
-                    .setContentIntent(pendingIntent)
-                    .build()
-        }else{
-            NotificationCompat.Builder(this, "ForegroundServiceChannel")
-                    .setContentTitle("${Managment.notificationTitle} is Currently Running")
-                    .setLargeIcon(Managment.notificationIcon)
-                    .setContentIntent(pendingIntent)
-                    .build()
+        val engine = FlutterEngineCache.getInstance().get(Constants.OVERLAY_ENGINE_CACHE_TAG)
+        if (engine != null) {
+            chatHeads?.content?.attachEngine(engine)
         }
-        startForeground(NOTIFICATION_ID, notification)
     }
 
-    override fun onBind(p0: Intent?): IBinder? {
-        return null
+    fun closeWindow(stopService: Boolean) {
+        chatHeads?.content?.detachEngine()
+        chatHeads?.let { ch ->
+            windowManager?.let {
+                ch.removeAllViews()
+                it.removeView(ch)
+            }
+        }
+        chatHeads = null
+        windowManager = null
+
+        overlayFlutterApi?.onChatHeadClosed { }
+
+        val engine = FlutterEngineCache.getInstance().get(Constants.OVERLAY_ENGINE_CACHE_TAG)
+        if (engine != null) {
+            FloatyOverlayHostApi.setUp(engine.dartExecutor, null)
+        }
+
+        if (stopService) {
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.cancel(Constants.NOTIFICATION_ID)
+            stopSelf()
+        }
     }
+
+    fun notifyChatHeadTapped() {
+        overlayFlutterApi?.onChatHeadTapped { }
+    }
+
+    override fun resizeContent(width: Long, height: Long) {
+        chatHeads?.content?.let { panel ->
+            val params = panel.layoutParams
+            if (params != null) {
+                params.width = width.toInt()
+                params.height = height.toInt()
+                panel.layoutParams = params
+            }
+        }
+    }
+
+    override fun updateFlag(flag: OverlayFlagMessage) {
+        // Placeholder for future flag updates on the overlay window
+    }
+
+    override fun closeOverlay() {
+        closeWindow(true)
+        FloatyHeadPlugin.isServiceRunning = false
+    }
+
+    override fun getOverlayPosition(): OverlayPositionMessage {
+        val topChatHead = chatHeads?.topChatHead
+        return if (topChatHead != null) {
+            OverlayPositionMessage(
+                x = topChatHead.springX.currentValue,
+                y = topChatHead.springY.currentValue,
+            )
+        } else {
+            OverlayPositionMessage(x = 0.0, y = 0.0)
+        }
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                Constants.NOTIFICATION_CHANNEL_ID,
+                "Floaty Chathead Service",
+                NotificationManager.IMPORTANCE_LOW,
+            )
+            val manager = getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun showNotification() {
+        val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+
+        val notificationIntent = packageManager.getLaunchIntentForPackage(packageName)
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0, notificationIntent, pendingIntentFlags,
+        )
+
+        val builder = NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL_ID)
+            .setContentTitle("${Managment.notificationTitle} is running")
+            .setContentIntent(pendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+
+        if (Managment.notificationIcon != null) {
+            builder.setLargeIcon(Managment.notificationIcon)
+        }
+
+        builder.setSmallIcon(R.drawable.ic_chathead)
+
+        startForeground(Constants.NOTIFICATION_ID, builder.build())
+    }
+
+    override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onDestroy() {
-        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        assert(notificationManager != null)
-        notificationManager.cancel(NOTIFICATION_ID)
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(Constants.NOTIFICATION_ID)
+        instance = null
         super.onDestroy()
     }
-
-    private fun setWindowManager() = windowManager ?: run { windowManager = getSystemService(WINDOW_SERVICE) as WindowManager }
 }

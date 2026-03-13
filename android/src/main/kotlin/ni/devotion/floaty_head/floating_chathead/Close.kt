@@ -8,7 +8,6 @@ import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import com.facebook.rebound.*
 import ni.devotion.floaty_head.R
-import ni.devotion.floaty_head.services.FloatyIconService
 import ni.devotion.floaty_head.utils.Managment
 
 class Close(var chatHeads: ChatHeads): View(chatHeads.context) {
@@ -102,12 +101,12 @@ class Close(var chatHeads: ChatHeads): View(chatHeads.context) {
         chatHeads.addView(gradient, gradientParams)
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         bitmapBg?.let {
-            canvas?.drawBitmap(it, width / 2 - it.width.toFloat() / 2, height / 2 - it.height.toFloat() / 2, paint)
+            canvas.drawBitmap(it, width / 2 - it.width.toFloat() / 2, height / 2 - it.height.toFloat() / 2, paint)
         }
         bitmapClose?.let {
-            canvas?.drawBitmap(it, width / 2 - it.width.toFloat() / 2, height / 2 - it.height.toFloat() / 2, paint)
+            canvas.drawBitmap(it, width / 2 - it.width.toFloat() / 2, height / 2 - it.height.toFloat() / 2, paint)
         }
     }
 }

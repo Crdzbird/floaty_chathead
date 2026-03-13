@@ -1,330 +1,338 @@
-import 'dart:async';
-
-import 'package:floaty_head/floaty_head.dart';
+import 'package:floaty_chathead/floaty_chathead.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-Future<void> main() async {
-  runApp(MaterialApp(home: Home()));
+import 'examples/messenger_example.dart';
+import 'examples/mini_player_example.dart';
+import 'examples/notification_counter_example.dart';
+import 'examples/quick_action_example.dart';
+import 'examples/timer_example.dart';
+import 'overlays/messenger_overlay.dart';
+import 'overlays/mini_player_overlay.dart';
+import 'overlays/notification_counter_overlay.dart';
+import 'overlays/quick_action_overlay.dart';
+import 'overlays/timer_overlay.dart';
+
+void main() => runApp(const MaterialApp(home: GalleryPage()));
+
+// ---------------------------------------------------------------------------
+// Overlay entry points — must be top-level for AOT discoverability.
+// ---------------------------------------------------------------------------
+
+@pragma('vm:entry-point')
+void overlayMain() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: OverlayContent(),
+    ),
+  );
 }
 
-class Home extends StatefulWidget {
-  _Home createState() => _Home();
+@pragma('vm:entry-point')
+void messengerOverlayMain() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MessengerOverlay(),
+    ),
+  );
 }
 
-class _Home extends State<Home> {
-  final FloatyHead floatyHead = FloatyHead();
-
-  final header = FloatyHeadHeader(
-    title: FloatyHeadText(
-      text: "Outgoing Call",
-      fontSize: 10,
-      textColor: Colors.black45,
-      fontWeight: FontWeight.normal,
-      padding: FloatyHeadPadding(
-        bottom: 4,
-        left: 5,
-        right: 5,
-        top: 5,
-      ),
+@pragma('vm:entry-point')
+void miniPlayerOverlayMain() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MiniPlayerOverlay(),
     ),
-    padding: FloatyHeadPadding.setSymmetricPadding(12, 12),
-    subTitle: FloatyHeadText(
-      text: "8989898989",
-      fontSize: 14,
-      fontWeight: FontWeight.bold,
-      padding: FloatyHeadPadding(
-        bottom: 4,
-        left: 5,
-        right: 5,
-        top: 5,
-      ),
-      textColor: Colors.black87,
+  );
+}
+
+@pragma('vm:entry-point')
+void quickActionOverlayMain() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: QuickActionOverlay(),
     ),
-    decoration: FloatyHeadDecoration(startColor: Colors.grey[100]),
-    button: FloatyHeadButton(
-        text: FloatyHeadText(
-          fontWeight: FontWeight.bold,
-          text: "Personal",
-          fontSize: 10,
-          textColor: Colors.black45,
-          padding: FloatyHeadPadding(
-            bottom: 4,
-            left: 5,
-            right: 5,
-            top: 5,
-          ),
-        ),
-        tag: "personal_btn"),
   );
+}
 
-  final body = FloatyHeadBody(
-    rows: [
-      EachRow(
-        columns: [
-          EachColumn(
-            text: FloatyHeadText(
-              fontWeight: FontWeight.bold,
-              text: "Updated body",
-              fontSize: 12,
-              textColor: Colors.black45,
-              padding: FloatyHeadPadding(
-                bottom: 4,
-                left: 5,
-                right: 5,
-                top: 5,
+@pragma('vm:entry-point')
+void counterOverlayMain() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: NotificationCounterOverlay(),
+    ),
+  );
+}
+
+@pragma('vm:entry-point')
+void timerOverlayMain() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: TimerOverlay(),
+    ),
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Gallery — lists all examples
+// ---------------------------------------------------------------------------
+
+class GalleryPage extends StatelessWidget {
+  const GalleryPage({super.key});
+
+  static const _examples = <_ExampleInfo>[
+    _ExampleInfo(
+      title: 'Basic (Original)',
+      description: 'Simple chathead with show, close, and send data buttons.',
+      icon: Icons.bubble_chart,
+      color: Colors.teal,
+    ),
+    _ExampleInfo(
+      title: 'Messenger Chat',
+      description: 'Bidirectional messaging between main app and overlay.',
+      icon: Icons.chat,
+      color: Colors.indigo,
+    ),
+    _ExampleInfo(
+      title: 'Mini Player',
+      description: 'Media transport controls with state sync.',
+      icon: Icons.music_note,
+      color: Colors.deepPurple,
+    ),
+    _ExampleInfo(
+      title: 'Quick Actions',
+      description: 'Click-through FAB buttons with action logging.',
+      icon: Icons.bolt,
+      color: Colors.orange,
+    ),
+    _ExampleInfo(
+      title: 'Notification Counter',
+      description: 'Reactive badge that updates from main app data.',
+      icon: Icons.notifications,
+      color: Colors.red,
+    ),
+    _ExampleInfo(
+      title: 'Timer / Stopwatch',
+      description: 'Persistent timer with dynamic resize and lap tracking.',
+      icon: Icons.timer,
+      color: Colors.blueGrey,
+    ),
+  ];
+
+  Widget _buildRoute(int index) {
+    return switch (index) {
+      0 => const HomePage(),
+      1 => const MessengerExample(),
+      2 => const MiniPlayerExample(),
+      3 => const QuickActionExample(),
+      4 => const NotificationCounterExample(),
+      5 => const TimerExample(),
+      _ => const HomePage(),
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Floaty Chathead Examples'),
+      ),
+      body: ListView.separated(
+        padding: const EdgeInsets.all(16),
+        itemCount: _examples.length,
+        separatorBuilder: (_, _) => const SizedBox(height: 12),
+        itemBuilder: (context, index) {
+          final info = _examples[index];
+          return Card(
+            clipBehavior: Clip.antiAlias,
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: info.color,
+                child: Icon(info.icon, color: Colors.white),
+              ),
+              title: Text(info.title),
+              subtitle: Text(info.description),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => _buildRoute(index),
+                ),
               ),
             ),
-          ),
-        ],
-        gravity: ContentGravity.center,
+          );
+        },
       ),
-      EachRow(columns: [
-        EachColumn(
-          text: FloatyHeadText(
-            text: "Updated long data of the body",
-            fontSize: 12,
-            textColor: Colors.black87,
-            fontWeight: FontWeight.bold,
-            padding: FloatyHeadPadding(
-              bottom: 4,
-              left: 5,
-              right: 5,
-              top: 5,
-            ),
-          ),
-          padding: FloatyHeadPadding.setSymmetricPadding(6, 8),
-          decoration: FloatyHeadDecoration(
-              startColor: Colors.black12, borderRadius: 25.0),
-          margin: FloatyHeadMargin(top: 4),
-        ),
-      ], gravity: ContentGravity.center),
-      EachRow(
-        columns: [
-          EachColumn(
-            text: FloatyHeadText(
-              text: "Notes",
-              fontSize: 10,
-              textColor: Colors.black45,
-              fontWeight: FontWeight.normal,
-              padding: FloatyHeadPadding(
-                bottom: 4,
-                left: 5,
-                right: 5,
-                top: 5,
-              ),
-            ),
-          ),
-        ],
-        gravity: ContentGravity.left,
-        margin: FloatyHeadMargin(top: 8),
-      ),
-      EachRow(
-        columns: [
-          EachColumn(
-            text: FloatyHeadText(
-              text: "Updated random notes.",
-              fontSize: 13,
-              textColor: Colors.black54,
-              fontWeight: FontWeight.bold,
-              padding: FloatyHeadPadding(
-                bottom: 4,
-                left: 5,
-                right: 5,
-                top: 5,
-              ),
-            ),
-          ),
-        ],
-        gravity: ContentGravity.left,
-      ),
-    ],
-    padding: FloatyHeadPadding(left: 16, right: 16, bottom: 12, top: 12),
-  );
+    );
+  }
+}
 
-  final footer = FloatyHeadFooter(
-    buttons: [
-      FloatyHeadButton(
-        text: FloatyHeadText(
-          text: "Simple button",
-          fontSize: 12,
-          textColor: Color.fromRGBO(250, 139, 97, 1),
-          padding: FloatyHeadPadding(
-            bottom: 4,
-            left: 5,
-            right: 5,
-            top: 5,
-          ),
-          fontWeight: FontWeight.normal,
-        ),
-        tag: "simple_button",
-        padding: FloatyHeadPadding(left: 10, right: 10, bottom: 10, top: 10),
-        width: 0,
-        height: FloatyHeadButton.WRAP_CONTENT,
-        decoration: FloatyHeadDecoration(
-            startColor: Colors.white,
-            endColor: Colors.white,
-            borderWidth: 0,
-            borderRadius: 0.0),
-      ),
-      FloatyHeadButton(
-        text: FloatyHeadText(
-          fontWeight: FontWeight.normal,
-          padding: FloatyHeadPadding(
-            bottom: 4,
-            left: 5,
-            right: 5,
-            top: 5,
-          ),
-          text: "Focus button",
-          fontSize: 12,
-          textColor: Colors.white,
-        ),
-        tag: "focus_button",
-        width: 0,
-        padding: FloatyHeadPadding(left: 10, right: 10, bottom: 10, top: 10),
-        height: FloatyHeadButton.WRAP_CONTENT,
-        decoration: FloatyHeadDecoration(
-            startColor: Color.fromRGBO(250, 139, 97, 1),
-            endColor: Color.fromRGBO(247, 28, 88, 1),
-            borderWidth: 0,
-            borderRadius: 30.0),
-      )
-    ],
-    padding: FloatyHeadPadding(left: 16, right: 16, bottom: 12),
-    decoration: FloatyHeadDecoration(startColor: Colors.white),
-    buttonsPosition: ButtonPosition.center,
-  );
+class _ExampleInfo {
+  const _ExampleInfo({
+    required this.title,
+    required this.description,
+    required this.icon,
+    required this.color,
+  });
 
-  bool alternateColor = false;
+  final String title;
+  final String description;
+  final IconData icon;
+  final Color color;
+}
+
+// ---------------------------------------------------------------------------
+// Basic example (original)
+// ---------------------------------------------------------------------------
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    FloatyChathead.onData.listen((data) {
+      debugPrint('Received from overlay: $data');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Basic Chathead')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ElevatedButton(
+                onPressed: _showChatHead,
+                child: const Text('Show Chathead'),
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: () => FloatyChathead.closeChatHead(),
+                child: const Text('Close Chathead'),
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: () =>
+                    FloatyChathead.shareData({'counter': 42}),
+                child: const Text('Send Data to Overlay'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showChatHead() async {
+    final granted = await FloatyChathead.checkPermission();
+    if (!granted) {
+      await FloatyChathead.requestPermission();
+    }
+    await FloatyChathead.showChatHead(
+      chatheadIconAsset: 'assets/chatheadIcon.png',
+      closeIconAsset: 'assets/close.png',
+      closeBackgroundAsset: 'assets/closeBg.png',
+      notificationTitle: 'Chathead Active',
+      notificationIconAsset: 'assets/notificationIcon.png',
+    );
+  }
+
+  @override
+  void dispose() {
+    FloatyChathead.dispose();
+    super.dispose();
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Basic overlay content (used by the "Basic" example)
+// ---------------------------------------------------------------------------
+
+class OverlayContent extends StatefulWidget {
+  const OverlayContent({super.key});
+
+  @override
+  State<OverlayContent> createState() => _OverlayContentState();
+}
+
+class _OverlayContentState extends State<OverlayContent> {
+  String _message = 'Waiting for data...';
 
   @override
   void initState() {
     super.initState();
-    FloatyHead.registerOnClickListener(callBack);
+    FloatyOverlay.setUp();
+    FloatyOverlay.onData.listen((data) {
+      if (mounted) {
+        setState(() => _message = 'Received: $data');
+      }
+    });
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text('Floaty Chathead')),
-        body: SingleChildScrollView(
-          padding: EdgeInsets.all(50),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ElevatedButton(
-                  child: Text('Open Floaty Chathead'),
-                  onPressed: () => floatyHead.openBubble()),
-              ElevatedButton(
-                  child: Text('Close Floaty Chathead'),
-                  onPressed: () => closeFloatyHead()),
-              ElevatedButton(
-                  child: Text('Set icon Floaty Chathead'),
-                  onPressed: () => setIcon()),
-              ElevatedButton(
-                  child: Text('Set close icon Floaty Chathead'),
-                  onPressed: () => setCloseIcon()),
-              ElevatedButton(
-                  child: Text('Set close background Icon Floaty Chathead'),
-                  onPressed: () => setCloseIconBackground()),
-              ElevatedButton(
-                  child: Text(
-                      'Set notification title to: OH MY GOD! THEY KILL KENNY!!! Floaty Chathead'),
-                  onPressed: () => setNotificationTitle()),
-              ElevatedButton(
-                  child: Text('Set notification Icon Floaty Chathead'),
-                  onPressed: () => setNotificationIcon()),
-              ElevatedButton(
-                  child: Text('Set Custom Header into Floaty Chathead'),
-                  onPressed: () => setCustomHeader()),
-            ],
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: Center(
+        child: Card(
+          margin: const EdgeInsets.all(16),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Overlay Content',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(_message),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () => FloatyOverlay.shareData(
+                    {'status': 'hello from overlay'},
+                  ),
+                  child: const Text('Send to Main App'),
+                ),
+                TextButton(
+                  onPressed: () => FloatyOverlay.closeOverlay(),
+                  child: const Text('Close'),
+                ),
+              ],
+            ),
           ),
         ),
-      );
-
-  void setCustomHeader() {
-    floatyHead.updateFloatyHeadContent(
-      header: header,
-      body: body,
-      footer: footer,
+      ),
     );
   }
 
-  void closeFloatyHead() {
-    if (floatyHead.isOpen) {
-      floatyHead.closeHead();
-    }
-  }
-
-  Future<void> setNotificationTitle() async {
-    String result;
-    try {
-      result = await floatyHead
-          .setNotificationTitle("OH MY GOD! THEY KILL KENNY!!!");
-    } on PlatformException {
-      result = 'Failed to get icon.';
-    }
-    print('result: $result');
-    if (!mounted) return;
-  }
-
-  Future<void> setNotificationIcon() async {
-    String result;
-    String assetPath = "assets/notificationIcon.png";
-    try {
-      result = await floatyHead.setNotificationIcon(assetPath);
-      print(result);
-    } on PlatformException {
-      result = 'Failed to get icon.';
-      print("failed: $result");
-    }
-    if (!mounted) return;
-  }
-
-  Future<void> setIcon() async {
-    String result;
-    String assetPath = "assets/chatheadIcon.png";
-    try {
-      result = await floatyHead.setIcon(assetPath);
-      print('result: $result');
-    } on PlatformException {
-      result = 'Failed to get icon.';
-    }
-    if (!mounted) return;
-  }
-
-  Future<void> setCloseIcon() async {
-    String assetPath = "assets/close.png";
-    try {
-      await floatyHead.setCloseIcon(assetPath);
-    } on PlatformException {
-      return;
-    }
-    if (!mounted) return;
-  }
-
-  Future<void> setCloseIconBackground() async {
-    String assetPath = "assets/closeBg.png";
-    try {
-      await floatyHead.setCloseBackgroundIcon(assetPath);
-    } on PlatformException {
-      return;
-    }
-    if (!mounted) return;
-  }
-}
-
-void callBack(String tag) {
-  print('CALLBACK FROM FRAGMENT BUILDED: $tag');
-  switch (tag) {
-    case "simple_button":
-    case "updated_simple_button":
-      break;
-    case "focus_button":
-      print("Focus button has been called");
-      break;
-    default:
-      print("OnClick event of $tag");
+  @override
+  void dispose() {
+    FloatyOverlay.dispose();
+    super.dispose();
   }
 }

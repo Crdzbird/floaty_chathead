@@ -1,27 +1,29 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:floaty_head_example/main.dart';
+import 'package:floaty_chathead_example/main.dart';
 
 void main() {
-  testWidgets('Verify Platform version', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(Home());
+  testWidgets('GalleryPage renders all example entries', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(const MaterialApp(home: GalleryPage()));
 
-    // Verify that platform version is retrieved.
-    expect(
-      find.byWidgetPredicate(
-        (Widget widget) =>
-            widget is Text && widget.data.startsWith('Running on:'),
-      ),
-      findsOneWidget,
-    );
+    expect(find.text('Floaty Chathead Examples'), findsOneWidget);
+    expect(find.text('Basic (Original)'), findsOneWidget);
+    expect(find.text('Messenger Chat'), findsOneWidget);
+    expect(find.text('Mini Player'), findsOneWidget);
+    expect(find.text('Quick Actions'), findsOneWidget);
+    expect(find.text('Notification Counter'), findsOneWidget);
+    expect(find.text('Timer / Stopwatch'), findsOneWidget);
+  });
+
+  testWidgets('HomePage renders correctly', (WidgetTester tester) async {
+    await tester.pumpWidget(const MaterialApp(home: HomePage()));
+
+    expect(find.text('Basic Chathead'), findsOneWidget);
+    expect(find.text('Show Chathead'), findsOneWidget);
+    expect(find.text('Close Chathead'), findsOneWidget);
+    expect(find.text('Send Data to Overlay'), findsOneWidget);
   });
 }

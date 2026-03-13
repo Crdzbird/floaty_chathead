@@ -13,10 +13,8 @@ import com.facebook.rebound.SpringChain
 import java.util.*
 import kotlin.math.*
 import android.app.ActivityManager
-import ni.devotion.floaty_head.FloatFragment
-import ni.devotion.floaty_head.R
+import ni.devotion.floaty_head.FlutterContentPanel
 import ni.devotion.floaty_head.services.FloatyContentJobService
-import ni.devotion.floaty_head.services.FloatyIconService
 import ni.devotion.floaty_head.utils.Managment
 
 
@@ -56,7 +54,7 @@ class ChatHeads(context: Context) : View.OnTouchListener, FrameLayout(context) {
     private var velocityTracker: VelocityTracker? = null
     private var motionTracker = LinearLayout(context)
     var topChatHead: ChatHead? = null
-    var content = FloatFragment(context)
+    var content = FlutterContentPanel(context)
     private var close = Close(this)
     var chatHeads = ArrayList<ChatHead>()
 
@@ -77,7 +75,7 @@ class ChatHeads(context: Context) : View.OnTouchListener, FrameLayout(context) {
     )
 
     init {
-        context.setTheme(R.style.Theme_MaterialComponents_Light)
+        context.setTheme(com.google.android.material.R.style.Theme_MaterialComponents_Light)
         params.gravity = Gravity.START or Gravity.TOP
         params.dimAmount = 0.7f
         motionTrackerParams.gravity = Gravity.START or Gravity.TOP
