@@ -200,7 +200,7 @@ class FloatyHeadPlugin : ActivityAware, FlutterPlugin, MethodChannel.MethodCallH
             "close" -> {
                 if(mBound){
                     FloatyContentJobService.instance!!.closeWindow(true)
-                    if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q){
+                    if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.R){
                         activity?.stopService(Intent(activity?.applicationContext, FloatyContentJobService::class.java))
                     }else{
                         activity?.startForegroundService(Intent(activity?.applicationContext, FloatyContentJobService::class.java))
